@@ -1,32 +1,46 @@
 ﻿using System;
+using System.Configuration;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
-using RBox.DataAccess;
+using RBox.Data;
 using RBox.Model;
 
-namespace RBox.DataAccess.Sql.Tests
+namespace RBox.Data.Sql.Tests
 {
     [TestClass]
     public class FilesRepositoryTests
     {
-        private const string ConnectionString =
-            @"Data Source=(localdb)\MSSQLLocalDB;Initial Catalog=RboxDatabase;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=True;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
-        private readonly IUsersRepository _usersRepository = new UsersRepository(ConnectionString);
+        private readonly string ConnectionString;
+        private readonly IUsersRepository _usersRepository;
         private readonly IFilesRepository _filesRepository;
 
         private User TestUser { get; set; }
 
-        public FilesRepositoryTests()
+        public FilesRepositoryTests(string connectionString)
         {
-            _filesRepository = new FilesRepository(ConnectionString, _usersRepository);
+            ConnectionString = connectionString;
+            _usersRepository = new UsersRepository(ConnectionString);
+            _filesRepository = new FilesRepository(ConnectionString);
+        }
+
+        public FilesRepositoryTests() : this(ConfigurationManager.ConnectionStrings["RBoxDb"].ConnectionString)
+        {
+
         }
 
         [TestInitialize]
         public void Init()
         {
-            TestUser = _usersRepository.Add("testUser", "testLogin", "TestPass");
+            var user = new User
+            {
+                Name = "testUser",
+                UserLogin = "testLogin",
+                Password = "TestPass"
+            };
+
+            TestUser = _usersRepository.AddUser(user);
         }
 
         [TestCleanup]
@@ -34,16 +48,16 @@ namespace RBox.DataAccess.Sql.Tests
         {
             if (TestUser != null)
             {
-                foreach (var file in _filesRepository.GetUserFiles(TestUser.UserId))
+                foreach (var file in _filesRepository.GetFilesByUserId(TestUser.UserId))
                 {
                     _filesRepository.Delete(file.FileId);
-                    _usersRepository.Delete(TestUser.UserId);
+                    _usersRepository.DeleteUser(TestUser.UserId);
                 }
             }
         }
 
         [TestMethod]
-        public void ShouldCreateAndGetFile()
+        public void ShouldCreateFile()
         {
             //arrange
             var file = new File

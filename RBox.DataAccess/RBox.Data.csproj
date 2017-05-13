@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{0B21FC30-3D61-4841-B846-208315F9651F}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>RBox.DataAccess</RootNamespace>
-    <AssemblyName>RBox.DataAccess</AssemblyName>
+    <RootNamespace>RBox.Data</RootNamespace>
+    <AssemblyName>RBox.Data</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>

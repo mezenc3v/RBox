@@ -1,33 +1,35 @@
 ﻿using System;
-using System.Configuration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using RBox.Model;
+using System.Configuration;
 
 namespace RBox.Data.Sql.Tests
 {
     [TestClass]
-    public class SharesRepositoryTests
+    public class CommentsRepositoryTests
     {
         private readonly string ConnectionString;
+
         private readonly IUsersRepository _usersRepository;
         private readonly IFilesRepository _filesRepository;
-        private readonly ISharesRepository _sharesRepository;
+        private readonly ICommentsRepository _commentsRepository;
 
         private User TestUser { get; set; }
         private File TestFile { get; set; }
 
-        public SharesRepositoryTests(string connectionString)
+        public CommentsRepositoryTests(string connectionString)
         {
             ConnectionString = connectionString;
             _usersRepository = new UsersRepository(ConnectionString);
             _filesRepository = new FilesRepository(ConnectionString);
-            _sharesRepository = new SharesRepository(ConnectionString);
+            _commentsRepository = new CommentsRepository(ConnectionString);
         }
 
-        public SharesRepositoryTests() : this(ConfigurationManager.ConnectionStrings["RBoxDb"].ConnectionString)
+        public CommentsRepositoryTests() : this(ConfigurationManager.ConnectionStrings["RBoxDb"].ConnectionString)
         {
 
         }
+
         [TestInitialize]
         public void Init()
         {
@@ -37,7 +39,6 @@ namespace RBox.Data.Sql.Tests
                 UserLogin = "testLogin",
                 Password = "TestPass"
             };
-
             TestUser = _usersRepository.AddUser(user);
 
             TestFile = new File
@@ -55,9 +56,9 @@ namespace RBox.Data.Sql.Tests
         {
             if (TestUser != null)
             {
-                foreach (var share in _sharesRepository.GetUserShares(TestUser.UserId))
+                foreach (var comment in _commentsRepository.GetComments(TestFile.FileId))
                 {
-                    _sharesRepository.DeleteShare(share.ShareId);
+                    _commentsRepository.DeleteComment(comment.CommentId);
                 }
                 foreach (var file in _filesRepository.GetFilesByUserId(TestUser.UserId))
                 {
@@ -68,19 +69,21 @@ namespace RBox.Data.Sql.Tests
         }
 
         [TestMethod]
-        public void ShouldCreateShare()
+        public void ShouldCreateComment()
         {
             //arrange
-            var share = new Share
+            var comment = new Comment
             {
                 FileId = TestFile.FileId,
-                UserId = TestUser.UserId
+                UserId = TestUser.UserId,
+                Text = "comment text"
             };
             //act
-            var testShare = _sharesRepository.AddShare(share);
+            var testComment = _commentsRepository.AddComment(comment);
             //asserts
-            Assert.AreEqual(testShare.UserId, TestUser.UserId);
-            Assert.AreEqual(testShare.FileId, TestFile.FileId);
+            Assert.AreEqual(testComment.UserId, TestUser.UserId);
+            Assert.AreEqual(testComment.FileId, TestFile.FileId);
+            Assert.AreEqual(testComment.Text, comment.Text);
         }
     }
 }

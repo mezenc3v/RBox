@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Data.SqlClient;
 using RBox.Model;
-namespace RBox.DataAccess.Sql
+namespace RBox.Data.Sql
 {
     public class UsersRepository : IUsersRepository
     {
@@ -16,7 +16,7 @@ namespace RBox.DataAccess.Sql
             _connectionString = connectionString;
         }
 
-        public User Add(string name, string login, string password)
+        public User AddUser(User user)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
@@ -24,46 +24,46 @@ namespace RBox.DataAccess.Sql
                 using (var command = connection.CreateCommand())
                 {
                     var userId = Guid.NewGuid();
-                    command.CommandText = "insert into users values (@id,@login,@password,@name)";
-                    command.Parameters.AddWithValue("@id", userId);
-                    command.Parameters.AddWithValue("@name", name);
-                    command.Parameters.AddWithValue("@login", login);
-                    command.Parameters.AddWithValue("@password", password);
+                    command.CommandText = "insert into users values (@userId,@login,@password,@name)";
+                    command.Parameters.AddWithValue("@userId", userId);
+                    command.Parameters.AddWithValue("@name", user.Name);
+                    command.Parameters.AddWithValue("@login", user.UserLogin);
+                    command.Parameters.AddWithValue("@password", user.Password);
                     command.ExecuteNonQuery();
                     return new User
                     {
                         UserId = userId,
-                        Name = name,
-                        Password = password,
-                        UserLogin = login
+                        Name = user.Name,
+                        Password = user.Password,
+                        UserLogin = user.UserLogin
                     };
                 }
             }
         }
 
-        public void Delete(Guid id)
+        public void DeleteUser(Guid userId)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
                 using (var command = connection.CreateCommand())
                 {
-                    command.CommandText = "delete from users where UserId = @id";
-                    command.Parameters.AddWithValue("@id", id);
+                    command.CommandText = "delete from users where UserId = @userId";
+                    command.Parameters.AddWithValue("@userId", userId);
                     command.ExecuteNonQuery();
                 }
             }
         }
 
-        public User Get(Guid id)
+        public User GetUser(Guid userId)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
                 using (var command = connection.CreateCommand())
                 {
-                    command.CommandText = "select UserId, Name, UserLogin, Password from users where UserId = @id";
-                    command.Parameters.AddWithValue("@id", id);
+                    command.CommandText = "select UserId, Name, UserLogin, Password from users where UserId = @userId";
+                    command.Parameters.AddWithValue("@userId", userId);
                     using (var reader = command.ExecuteReader())
                     {
                         while (reader.Read())
@@ -78,6 +78,23 @@ namespace RBox.DataAccess.Sql
                         }
                     }
                     throw new ArgumentException("user not found");
+                }
+            }
+        }
+
+        public void UpdateUser(Guid userId, User user)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+                using (var command = connection.CreateCommand())
+                {
+                    command.CommandText = "update users set Name = @name, Userlogin = @userlogin, Password = @password where userId = @userId";
+                    command.Parameters.AddWithValue("@name", user.Name);
+                    command.Parameters.AddWithValue("@Userlogin", user.UserLogin);
+                    command.Parameters.AddWithValue("@Password", user.Password);
+                    command.Parameters.AddWithValue("@userId", userId);
+                    command.ExecuteNonQuery();
                 }
             }
         }

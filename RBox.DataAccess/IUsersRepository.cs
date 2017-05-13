@@ -5,12 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 using RBox.Model;
 
-namespace RBox.DataAccess
+namespace RBox.Data
 {
     public interface IUsersRepository
     {
-        User Add(string name, string login, string password);
-        void Delete(Guid id);
-        User Get(Guid id);
+        User AddUser(User user);
+        void DeleteUser(Guid userId);
+        User GetUser(Guid userId);
+        void UpdateUser(Guid userId, User user);
     }
 }

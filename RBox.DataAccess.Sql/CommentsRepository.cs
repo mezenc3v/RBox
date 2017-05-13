@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using RBox.Model;
 
-namespace RBox.DataAccess.Sql
+namespace RBox.Data.Sql
 {
     public class CommentsRepository : ICommentsRepository
     {
@@ -45,7 +45,7 @@ namespace RBox.DataAccess.Sql
             }
         }
 
-        public Comment Add(Comment comment)
+        public Comment AddComment(Comment comment)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
@@ -90,22 +90,23 @@ namespace RBox.DataAccess.Sql
             }
         }
 
-        public void UpdateText(Guid commentId, string text)
+        public void UpdateComment(Guid commentId, Comment comment)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
                 using (var command = connection.CreateCommand())
                 {
-                    command.CommandText = "update Comments set Text = @test where CommentId = @id";
+                    command.CommandText = "update Comments set Text = @text, Date = @date where CommentId = @id";
                     command.Parameters.AddWithValue("@id", commentId);
-                    command.Parameters.AddWithValue("@Text", text);
+                    command.Parameters.AddWithValue("@text", comment.Text);
+                    command.Parameters.AddWithValue("@date", DateTime.Now);
                     command.ExecuteNonQuery();
                 }
             }
         }
 
-        public void Delete(Guid commentId)
+        public void DeleteComment(Guid commentId)
         {
             using (var connection = new SqlConnection(_connectionString))
             {

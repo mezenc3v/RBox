@@ -5,15 +5,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RBox.DataAccess
+namespace RBox.Data
 {
     public interface IFilesRepository
     {
         File Add(File file);
-        byte[] GetContent(Guid id);
+        byte[] GetContent(Guid fileId);
         File GetInfo(Guid fileId);
-        void UpdateContent(Guid id, byte[] content);
-        IEnumerable<File> GetUserFiles(Guid id);
-        void Delete(Guid id);
+        void UpdateContent(Guid fileId, byte[] content);
+        IEnumerable<File> GetFilesByUserId(Guid userId);
+        void Delete(Guid fileId);
     }
 }

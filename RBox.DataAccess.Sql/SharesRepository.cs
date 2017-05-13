@@ -5,8 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using RBox.Model;
+using System.Configuration;
 
-namespace RBox.DataAccess.Sql
+namespace RBox.Data.Sql
 {
     public class SharesRepository : ISharesRepository
     {
@@ -17,15 +18,20 @@ namespace RBox.DataAccess.Sql
             _connectionString = connectionString;
         }
 
-        public Share GetShare(Guid id)
+        public SharesRepository() : this(ConfigurationManager.ConnectionStrings["RBoxDb"].ConnectionString)
+        {
+
+        }
+
+        public Share GetShare(Guid shareId)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
                 using (var command = connection.CreateCommand())
                 {
-                    command.CommandText = "select ShareId, FileId, UserId from Shares where ShareId = @id";
-                    command.Parameters.AddWithValue("@id", id);
+                    command.CommandText = "select ShareId, FileId, UserId from Shares where ShareId = @shareId";
+                    command.Parameters.AddWithValue("@shareId", shareId);
                     using (var reader = command.ExecuteReader())
                     {
                         while (reader.Read())
@@ -37,13 +43,13 @@ namespace RBox.DataAccess.Sql
                                 UserId = reader.GetGuid(reader.GetOrdinal("UserId"))
                             };
                         }
-                        throw new ArgumentException($"share {id} not found");
+                        throw new ArgumentException($"share {shareId} not found");
                     }
                 }
             }
         }
 
-        public Share Add(Share share)
+        public Share AddShare(Share share)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
@@ -62,15 +68,15 @@ namespace RBox.DataAccess.Sql
             }
         }
 
-        public void Delete(Guid id)
+        public void DeleteShare(Guid shareId)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
                 connection.Open();
                 using (var command = connection.CreateCommand())
                 {
-                    command.CommandText = "delete from shares where ShareId = @id";
-                    command.Parameters.AddWithValue("@id", id);
+                    command.CommandText = "delete from shares where ShareId = @shareId";
+                    command.Parameters.AddWithValue("@shareId", shareId);
                     command.ExecuteNonQuery();
                 }
             }

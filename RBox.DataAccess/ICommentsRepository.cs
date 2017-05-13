@@ -5,13 +5,13 @@ using System.Text;
 using System.Threading.Tasks;
 using RBox.Model;
 
-namespace RBox.DataAccess
+namespace RBox.Data
 {
     public interface ICommentsRepository
     {
-        Comment Add(Comment comment);
+        Comment AddComment(Comment comment);
         IEnumerable<Comment> GetComments(Guid fileId);
-        void UpdateText(Guid commentId, string text);
-        void Delete(Guid commentId);
+        void UpdateComment(Guid commentId, Comment comment);
+        void DeleteComment(Guid commentId);
     }
 }
