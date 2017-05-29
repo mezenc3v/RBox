@@ -44,7 +44,7 @@
     <Compile Include="UsersRepository.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\RBox.DataAccess\RBox.Data.csproj">
+    <ProjectReference Include="..\RBox.Data\RBox.Data.csproj">
       <Project>{0b21fc30-3d61-4841-b846-208315f9651f}</Project>
       <Name>RBox.Data</Name>
     </ProjectReference>

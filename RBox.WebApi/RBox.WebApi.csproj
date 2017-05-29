@@ -51,6 +51,9 @@
     <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
     </Reference>
+    <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <HintPath>..\packages\NLog.4.4.9\lib\net45\NLog.dll</HintPath>
+    </Reference>
     <Reference Include="Swashbuckle.Core, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cd1bb07a5ac7c7bc, processorArchitecture=MSIL">
       <HintPath>..\packages\Swashbuckle.Core.5.5.3\lib\net40\Swashbuckle.Core.dll</HintPath>
     </Reference>
@@ -107,6 +110,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
+    <Content Include="NLog.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Include="NLog.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -119,13 +128,17 @@
     <Folder Include="Models\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\RBox.DataAccess.Sql\RBox.Data.Sql.csproj">
+    <ProjectReference Include="..\RBox.Data.Sql\RBox.Data.Sql.csproj">
       <Project>{4C88C7EA-F752-4E8A-AC9B-37FDD8372980}</Project>
       <Name>RBox.Data.Sql</Name>
     </ProjectReference>
-    <ProjectReference Include="..\RBox.DataAccess\RBox.Data.csproj">
+    <ProjectReference Include="..\RBox.Data\RBox.Data.csproj">
       <Project>{0B21FC30-3D61-4841-B846-208315F9651F}</Project>
       <Name>RBox.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\RBox.Log\RBox.Log.csproj">
+      <Project>{1bbdb1e8-a30f-4828-86d7-36620f549680}</Project>
+      <Name>RBox.Log</Name>
     </ProjectReference>
     <ProjectReference Include="..\RBox.Model\RBox.Model.csproj">
       <Project>{1FE72968-A57D-47AD-A4C8-D1E42DDFAA6B}</Project>

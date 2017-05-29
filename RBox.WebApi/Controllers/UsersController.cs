@@ -37,7 +37,17 @@ namespace RBox.WebApi.Controllers
         [Route("")]
         public User CreateUser([FromBody]User user)
         {
-            return _usersRepository.AddUser(user);
+            try
+            {
+                var newUser = _usersRepository.AddUser(user);
+                Log.Logger.ServiceLog.Info("Create user with id: {0}", newUser.UserId);
+                return newUser;
+            }
+            catch (Exception ex)
+            {
+                Log.Logger.ServiceLog.Fatal(ex.Message);
+                throw;
+            }
         }
 
         /// <summary>
@@ -49,7 +59,16 @@ namespace RBox.WebApi.Controllers
         [Route("{id}")]
         public User GetUser(Guid id)
         {
-            return _usersRepository.GetUser(id);
+            try
+            {
+                var user = _usersRepository.GetUser(id);
+                return user;
+            }
+            catch (Exception ex)
+            {
+                Log.Logger.ServiceLog.Error(ex.Message);
+                throw;
+            }
         }
 
         /// <summary>
@@ -60,7 +79,16 @@ namespace RBox.WebApi.Controllers
         [Route("{id}")]
         public void DeleteUser(Guid id)
         {
-            _usersRepository.DeleteUser(id);
+            try
+            {
+                Log.Logger.ServiceLog.Info("Delete user with id: {0}", id);
+                _usersRepository.DeleteUser(id);
+            }
+            catch (Exception ex)
+            {
+                Log.Logger.ServiceLog.Error(ex.Message);
+                throw;
+            }
         }
 
         /// <summary>
@@ -72,7 +100,16 @@ namespace RBox.WebApi.Controllers
         [Route("{id}/files")]
         public IEnumerable<File> GetUserFiles(Guid id)
         {
-            return _filesRepository.GetFilesByUserId(id);
+            try
+            {
+                return _filesRepository.GetFilesByUserId(id);
+            }
+            catch (Exception ex)
+            {
+                Log.Logger.ServiceLog.Error(ex.Message);
+                throw;
+            }
+            
         }
 
         /// <summary>
@@ -84,7 +121,15 @@ namespace RBox.WebApi.Controllers
         [Route("{id}")]
         public void UpdateUser(Guid id, [FromBody]User user)
         {
-            _usersRepository.UpdateUser(id, user);
+            try
+            {
+                _usersRepository.UpdateUser(id, user);
+            }
+            catch (Exception ex)
+            {
+                Log.Logger.ServiceLog.Error(ex.Message);
+                throw;
+            }
         }
     }
 }

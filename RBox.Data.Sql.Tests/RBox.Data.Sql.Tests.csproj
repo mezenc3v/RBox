@@ -62,11 +62,11 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\RBox.DataAccess.Sql\RBox.Data.Sql.csproj">
+    <ProjectReference Include="..\RBox.Data.Sql\RBox.Data.Sql.csproj">
       <Project>{4c88c7ea-f752-4e8a-ac9b-37fdd8372980}</Project>
       <Name>RBox.Data.Sql</Name>
     </ProjectReference>
-    <ProjectReference Include="..\RBox.DataAccess\RBox.Data.csproj">
+    <ProjectReference Include="..\RBox.Data\RBox.Data.csproj">
       <Project>{0b21fc30-3d61-4841-b846-208315f9651f}</Project>
       <Name>RBox.Data</Name>
     </ProjectReference>

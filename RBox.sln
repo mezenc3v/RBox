@@ -1,17 +1,19 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26228.9
+VisualStudioVersion = 15.0.26430.6
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RBox.Model", "RBox.Model\RBox.Model.csproj", "{1FE72968-A57D-47AD-A4C8-D1E42DDFAA6B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RBox.Data", "RBox.DataAccess\RBox.Data.csproj", "{0B21FC30-3D61-4841-B846-208315F9651F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RBox.Data", "RBox.Data\RBox.Data.csproj", "{0B21FC30-3D61-4841-B846-208315F9651F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RBox.Data.Sql", "RBox.DataAccess.Sql\RBox.Data.Sql.csproj", "{4C88C7EA-F752-4E8A-AC9B-37FDD8372980}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RBox.Data.Sql", "RBox.Data.Sql\RBox.Data.Sql.csproj", "{4C88C7EA-F752-4E8A-AC9B-37FDD8372980}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RBox.Data.Sql.Tests", "RBox.DataAccess.Sql.Tests\RBox.Data.Sql.Tests.csproj", "{AFE62647-009C-4EA7-AFBE-7E1E1AFEBD73}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RBox.Data.Sql.Tests", "RBox.Data.Sql.Tests\RBox.Data.Sql.Tests.csproj", "{AFE62647-009C-4EA7-AFBE-7E1E1AFEBD73}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RBox.WebApi", "RBox.WebApi\RBox.WebApi.csproj", "{1CA49876-F2A7-4454-BB49-34082C6C1F86}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RBox.Log", "RBox.Log\RBox.Log.csproj", "{1BBDB1E8-A30F-4828-86D7-36620F549680}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{1CA49876-F2A7-4454-BB49-34082C6C1F86}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1CA49876-F2A7-4454-BB49-34082C6C1F86}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1CA49876-F2A7-4454-BB49-34082C6C1F86}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1BBDB1E8-A30F-4828-86D7-36620F549680}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1BBDB1E8-A30F-4828-86D7-36620F549680}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1BBDB1E8-A30F-4828-86D7-36620F549680}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1BBDB1E8-A30F-4828-86D7-36620F549680}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

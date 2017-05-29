@@ -42,7 +42,16 @@ namespace RBox.WebApi.Controllers
         [Route("{id}")]
         public File GetFileInfo(Guid id)
         {
-            return _filesRepository.GetInfo(id);
+            try
+            {
+                return _filesRepository.GetInfo(id);
+            }
+            catch (Exception ex)
+            {
+                Log.Logger.ServiceLog.Error(ex.Message);
+                throw;
+            }
+
         }
 
         /// <summary>
@@ -54,7 +63,15 @@ namespace RBox.WebApi.Controllers
         [Route("{id}/content")]
         public byte[] GetFileContent(Guid id)
         {
-            return _filesRepository.GetContent(id);
+            try
+            {
+                return _filesRepository.GetContent(id);
+            }
+            catch (Exception ex)
+            {
+                Log.Logger.ServiceLog.Error(ex.Message);
+                throw;
+            }
         }
 
         /// <summary>
@@ -66,7 +83,15 @@ namespace RBox.WebApi.Controllers
         [Route("")]
         public File CreateFile(File file)
         {
-            return _filesRepository.Add(file);
+            try
+            {
+                return _filesRepository.Add(file);
+            }
+            catch (Exception ex)
+            {
+                Log.Logger.ServiceLog.Error(ex.Message);
+                throw;
+            }
         }
 
         /// <summary>
@@ -78,8 +103,16 @@ namespace RBox.WebApi.Controllers
         [Route("{id}/content")]
         public async Task UpdateFileContent(Guid id)
         {
-            var bytes = await Request.Content.ReadAsByteArrayAsync();
-            _filesRepository.UpdateContent(id, bytes);
+            try
+            {
+                var bytes = await Request.Content.ReadAsByteArrayAsync();
+                _filesRepository.UpdateContent(id, bytes);
+            }
+            catch (Exception ex)
+            {
+                Log.Logger.ServiceLog.Error(ex.Message);
+                throw;
+            }
         }
 
         /// <summary>
@@ -91,7 +124,15 @@ namespace RBox.WebApi.Controllers
         [Route("{id}/comments")]
         public IEnumerable<Comment> GetComments([FromUri] Guid id)
         {
-            return _commentsRepository.GetComments(id);
+            try
+            {
+                return _commentsRepository.GetComments(id);
+            }
+            catch (Exception ex)
+            {
+                Log.Logger.ServiceLog.Error(ex.Message);
+                throw;
+            }
         }
 
         /// <summary>
@@ -103,7 +144,15 @@ namespace RBox.WebApi.Controllers
         [Route("{id}/comments")]
         public Comment CreateComment(Comment comment)
         {
-            return _commentsRepository.AddComment(comment);
+            try
+            {
+                return _commentsRepository.AddComment(comment);
+            }
+            catch (Exception ex)
+            {
+                Log.Logger.ServiceLog.Error(ex.Message);
+                throw;
+            }
         }
 
         /// <summary>
@@ -115,7 +164,15 @@ namespace RBox.WebApi.Controllers
         [Route("{id}/comments/{commentId}")]
         public void UpdateComment(Guid commentId, Comment comment)
         {
-            _commentsRepository.UpdateComment(commentId, comment);
+            try
+            {
+                _commentsRepository.UpdateComment(commentId, comment);
+            }
+            catch (Exception ex)
+            {
+                Log.Logger.ServiceLog.Error(ex.Message);
+                throw;
+            }
         }
     }
 }
