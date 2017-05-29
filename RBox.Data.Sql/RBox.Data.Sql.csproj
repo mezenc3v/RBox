@@ -36,6 +36,7 @@
   </PropertyGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommentsRepository.cs" />
@@ -48,12 +49,19 @@
       <Project>{0b21fc30-3d61-4841-b846-208315f9651f}</Project>
       <Name>RBox.Data</Name>
     </ProjectReference>
+    <ProjectReference Include="..\RBox.Log\RBox.Log.csproj">
+      <Project>{1bbdb1e8-a30f-4828-86d7-36620f549680}</Project>
+      <Name>RBox.Log</Name>
+    </ProjectReference>
     <ProjectReference Include="..\RBox.Model\RBox.Model.csproj">
       <Project>{1fe72968-a57d-47ad-a4c8-d1e42ddfaa6b}</Project>
       <Name>RBox.Model</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <HintPath>..\packages\NLog.4.4.9\lib\net45\NLog.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />

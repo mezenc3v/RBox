@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Data.SqlClient;
 using RBox.Model;
 namespace RBox.Data.Sql
@@ -18,8 +14,10 @@ namespace RBox.Data.Sql
 
         public User AddUser(User user)
         {
-            using (var connection = new SqlConnection(_connectionString))
+            SqlConnection connection = null;
+            try
             {
+                connection = new SqlConnection(_connectionString);
                 connection.Open();
                 using (var command = connection.CreateCommand())
                 {
@@ -39,12 +37,23 @@ namespace RBox.Data.Sql
                     };
                 }
             }
+            catch (Exception ex)
+            {
+                Log.Logger.ServiceLog.Fatal(ex.Message);
+                throw;
+            }
+            finally
+            {
+                connection?.Dispose();
+            }
         }
 
         public void DeleteUser(Guid userId)
         {
-            using (var connection = new SqlConnection(_connectionString))
+            SqlConnection connection = null;
+            try
             {
+                connection = new SqlConnection(_connectionString);
                 connection.Open();
                 using (var command = connection.CreateCommand())
                 {
@@ -53,12 +62,23 @@ namespace RBox.Data.Sql
                     command.ExecuteNonQuery();
                 }
             }
+            catch (Exception ex)
+            {
+                Log.Logger.ServiceLog.Fatal(ex.Message);
+                throw;
+            }
+            finally
+            {
+                connection?.Dispose();
+            }
         }
 
         public User GetUser(Guid userId)
         {
-            using (var connection = new SqlConnection(_connectionString))
+            SqlConnection connection = null;
+            try
             {
+                connection = new SqlConnection(_connectionString);
                 connection.Open();
                 using (var command = connection.CreateCommand())
                 {
@@ -80,12 +100,23 @@ namespace RBox.Data.Sql
                     throw new ArgumentException("user not found");
                 }
             }
+            catch (Exception ex)
+            {
+                Log.Logger.ServiceLog.Fatal(ex.Message);
+                throw;
+            }
+            finally
+            {
+                connection?.Dispose();
+            }
         }
 
         public void UpdateUser(Guid userId, User user)
         {
-            using (var connection = new SqlConnection(_connectionString))
+            SqlConnection connection = null;
+            try
             {
+                connection = new SqlConnection(_connectionString);
                 connection.Open();
                 using (var command = connection.CreateCommand())
                 {
@@ -96,6 +127,16 @@ namespace RBox.Data.Sql
                     command.Parameters.AddWithValue("@userId", userId);
                     command.ExecuteNonQuery();
                 }
+                throw new ArgumentException("user not found");
+            }
+            catch (Exception ex)
+            {
+                Log.Logger.ServiceLog.Fatal(ex.Message);
+                throw;
+            }
+            finally
+            {
+                connection?.Dispose();
             }
         }
     }
