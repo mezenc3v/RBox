@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Web.Http;
 using RBox.Data;
 using RBox.Data.Sql;
@@ -11,18 +9,28 @@ using RBox.Model;
 
 namespace RBox.WebApi.Controllers
 {
+    /// <summary>
+    /// User Controller
+    /// </summary>
     [RoutePrefix("api/users")]
     public class UsersController : ApiController
     {
+        private readonly ISharesRepository _sharesRepository;
         private readonly IUsersRepository _usersRepository;
         private readonly IFilesRepository _filesRepository;
-
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="connectionString"></param>
         public UsersController(string connectionString)
         {
+            _sharesRepository = new SharesRepository(connectionString);
             _usersRepository = new UsersRepository(connectionString);
             _filesRepository = new FilesRepository(connectionString);
         }
-
+        /// <summary>
+        /// Different constructor
+        /// </summary>
         public UsersController() : this(ConfigurationManager.ConnectionStrings["RBoxDb"].ConnectionString)
         {
 
@@ -45,7 +53,7 @@ namespace RBox.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                Log.Logger.ServiceLog.Fatal(ex.Message);
+                Log.Logger.ServiceLog.Error(ex.Message);
                 throw;
             }
         }
@@ -63,6 +71,53 @@ namespace RBox.WebApi.Controllers
             {
                 var user = _usersRepository.GetUser(id);
                 return user;
+            }
+            catch (Exception ex)
+            {
+                Log.Logger.ServiceLog.Error(ex.Message);
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// find user
+        /// </summary>
+        /// <param name="user">user search</param>
+        /// <returns>found user</returns>
+        [HttpPost]
+        [Route("user")]
+        public User FindUser([FromBody] User user)
+        {
+            try
+            {
+                var foundUser = _usersRepository.FindUser(user);
+                return foundUser;
+            }
+            catch (Exception ex)
+            {
+                Log.Logger.ServiceLog.Error(ex.Message);
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// login user
+        /// </summary>
+        /// <param name="loginUser">user</param>
+        /// <returns>logged user</returns>
+        [HttpPost]
+        [Route("login")]
+        public User LoginUser([FromBody] User loginUser)
+        {
+            try
+            {
+                var user = new User
+                {
+                    UserLogin = loginUser.UserLogin,
+                    Password = loginUser.Password
+                };
+                var foundUser = _usersRepository.LoginUser(user);
+                return foundUser;
             }
             catch (Exception ex)
             {
@@ -110,6 +165,49 @@ namespace RBox.WebApi.Controllers
                 throw;
             }
             
+        }
+
+        /// <summary>
+        /// get shared files
+        /// </summary>
+        /// <param name="id">user id</param>
+        /// <returns>collection of files</returns>
+        [HttpGet]
+        [Route("{id}/shares")]
+        public IEnumerable<File> GetUserSharedFiles(Guid id)
+        {
+            try
+            {
+                var shares = _sharesRepository.GetUserShares(id);
+                return shares.Select(share => _filesRepository.GetInfo(share.FileId));
+            }
+            catch (Exception ex)
+            {
+                Log.Logger.ServiceLog.Error(ex.Message);
+                throw;
+            }
+        }
+
+        /// <summary>
+        /// Add new share
+        /// </summary>
+        /// <param name="share">the share you want to create</param>
+        /// <returns></returns>
+        [HttpPost]
+        [Route("share")]
+        public Share AddShare([FromBody]Share share)
+        {
+            try
+            {
+                var newShare = _sharesRepository.AddShare(share);
+                Log.Logger.ServiceLog.Info("Create share with id: {0}", share.UserId);
+                return newShare;
+            }
+            catch (Exception ex)
+            {
+                Log.Logger.ServiceLog.Error(ex.Message);
+                throw;
+            }
         }
 
         /// <summary>

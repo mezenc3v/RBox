@@ -9,12 +9,18 @@ using Swashbuckle.Application;
 
 namespace RBox.WebApi
 {
+    /// <summary>
+    /// Swagger
+    /// </summary>
     public class SwaggerConfig
     {
         private static string GetXmlCommentsPath()
         {
             return string.Format(@"{0}\bin\RBox.WebApi.xml", System.AppDomain.CurrentDomain.BaseDirectory);
         }
+        /// <summary>
+        /// Register
+        /// </summary>
         public static void Register()
         {
             var thisAssembly = typeof(SwaggerConfig).Assembly;

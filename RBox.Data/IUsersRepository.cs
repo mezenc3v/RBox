@@ -11,7 +11,9 @@ namespace RBox.Data
     {
         User AddUser(User user);
         void DeleteUser(Guid userId);
+        User LoginUser(User user);
         User GetUser(Guid userId);
+        User FindUser(User user);
         void UpdateUser(Guid userId, User user);
     }
 }

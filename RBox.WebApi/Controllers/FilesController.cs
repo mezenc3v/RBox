@@ -4,15 +4,14 @@ using RBox.Model;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
-using System.Linq;
-using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
-using System.Web.Routing;
 
 namespace RBox.WebApi.Controllers
 {
+    /// <summary>
+    /// Files Controller
+    /// </summary>
     [RoutePrefix("api/files")]
     public class FilesController : ApiController
     {
@@ -20,7 +19,10 @@ namespace RBox.WebApi.Controllers
         private readonly IFilesRepository _filesRepository;
         private readonly ISharesRepository _sharesRepository;
         private readonly ICommentsRepository _commentsRepository;
-
+        /// <summary>
+        /// constructor
+        /// </summary>
+        /// <param name="connectionString"></param>
         public FilesController(string connectionString)
         {
             _usersRepository = new UsersRepository(connectionString);
@@ -28,7 +30,9 @@ namespace RBox.WebApi.Controllers
             _sharesRepository = new SharesRepository(connectionString);
             _commentsRepository = new CommentsRepository(connectionString);
         }
-
+        /// <summary>
+        /// different constructor
+        /// </summary>
         public FilesController() : this(ConfigurationManager.ConnectionStrings["RBoxDb"].ConnectionString)
         {
 
@@ -113,6 +117,16 @@ namespace RBox.WebApi.Controllers
                 Log.Logger.ServiceLog.Error(ex.Message);
                 throw;
             }
+        }
+        /// <summary>
+        /// delete file
+        /// </summary>
+        /// <param name="id">file id</param>
+        [HttpDelete]
+        [Route("{id}")]
+        public void Delete(Guid id)
+        {
+            _filesRepository.Delete(id);
         }
 
         /// <summary>

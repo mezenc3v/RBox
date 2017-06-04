@@ -111,6 +111,82 @@ namespace RBox.Data.Sql
             }
         }
 
+        public User LoginUser(User user)
+        {
+            SqlConnection connection = null;
+            try
+            {
+                connection = new SqlConnection(_connectionString);
+                connection.Open();
+                using (var command = connection.CreateCommand())
+                {
+                    command.CommandText = "select UserId, Name, UserLogin, Password from users where UserLogin = @login AND Password = @password";
+                    command.Parameters.AddWithValue("@login", user.UserLogin);
+                    command.Parameters.AddWithValue("@password", user.Password);
+                    using (var reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            return new User
+                            {
+                                UserId = reader.GetGuid(reader.GetOrdinal("UserId")),
+                                Name = reader.GetString(reader.GetOrdinal("Name")),
+                                UserLogin = reader.GetString(reader.GetOrdinal("UserLogin")),
+                                Password = reader.GetString(reader.GetOrdinal("Password"))
+                            };
+                        }
+                    }
+                    throw new ArgumentException("user not found");
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Logger.ServiceLog.Fatal(ex.Message);
+                throw;
+            }
+            finally
+            {
+                connection?.Dispose();
+            }
+        }
+
+        public User FindUser(User user)
+        {
+            SqlConnection connection = null;
+            try
+            {
+                connection = new SqlConnection(_connectionString);
+                connection.Open();
+                using (var command = connection.CreateCommand())
+                {
+                    command.CommandText = "select UserId, Name, UserLogin from users where UserLogin = @login";
+                    command.Parameters.AddWithValue("@login", user.UserLogin);
+                    using (var reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            return new User
+                            {
+                                UserId = reader.GetGuid(reader.GetOrdinal("UserId")),
+                                Name = reader.GetString(reader.GetOrdinal("Name")),
+                                UserLogin = reader.GetString(reader.GetOrdinal("UserLogin")),
+                            };
+                        }
+                    }
+                    throw new ArgumentException("user not found");
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Logger.ServiceLog.Fatal(ex.Message);
+                throw;
+            }
+            finally
+            {
+                connection?.Dispose();
+            }
+        }
+
         public void UpdateUser(Guid userId, User user)
         {
             SqlConnection connection = null;
