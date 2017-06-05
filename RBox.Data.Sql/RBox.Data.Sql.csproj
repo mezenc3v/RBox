@@ -39,7 +39,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CommentsRepository.cs" />
     <Compile Include="FilesRepository.cs" />
     <Compile Include="SharesRepository.cs" />
     <Compile Include="UsersRepository.cs" />

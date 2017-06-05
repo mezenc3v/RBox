@@ -38,7 +38,6 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ICommentsRepository.cs" />
     <Compile Include="IFilesRepository.cs" />
     <Compile Include="ISharesRepository.cs" />
     <Compile Include="IUsersRepository.cs" />

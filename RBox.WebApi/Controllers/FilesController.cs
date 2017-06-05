@@ -2,7 +2,6 @@
 using RBox.Data.Sql;
 using RBox.Model;
 using System;
-using System.Collections.Generic;
 using System.Configuration;
 using System.Threading.Tasks;
 using System.Web.Http;
@@ -15,20 +14,14 @@ namespace RBox.WebApi.Controllers
     [RoutePrefix("api/files")]
     public class FilesController : ApiController
     {
-        private readonly IUsersRepository _usersRepository;
         private readonly IFilesRepository _filesRepository;
-        private readonly ISharesRepository _sharesRepository;
-        private readonly ICommentsRepository _commentsRepository;
         /// <summary>
         /// constructor
         /// </summary>
         /// <param name="connectionString"></param>
         public FilesController(string connectionString)
         {
-            _usersRepository = new UsersRepository(connectionString);
             _filesRepository = new FilesRepository(connectionString);
-            _sharesRepository = new SharesRepository(connectionString);
-            _commentsRepository = new CommentsRepository(connectionString);
         }
         /// <summary>
         /// different constructor
@@ -127,66 +120,6 @@ namespace RBox.WebApi.Controllers
         public void Delete(Guid id)
         {
             _filesRepository.Delete(id);
-        }
-
-        /// <summary>
-        /// get file comment
-        /// </summary>
-        /// <param name="id">file id</param>
-        /// <returns>collection of comments</returns>
-        [HttpGet]
-        [Route("{id}/comments")]
-        public IEnumerable<Comment> GetComments([FromUri] Guid id)
-        {
-            try
-            {
-                return _commentsRepository.GetComments(id);
-            }
-            catch (Exception ex)
-            {
-                Log.Logger.ServiceLog.Error(ex.Message);
-                throw;
-            }
-        }
-
-        /// <summary>
-        /// create comment
-        /// </summary>
-        /// <param name="comment">the comment you want to create</param>
-        /// <returns>created comment</returns>
-        [HttpPost]
-        [Route("{id}/comments")]
-        public Comment CreateComment(Comment comment)
-        {
-            try
-            {
-                return _commentsRepository.AddComment(comment);
-            }
-            catch (Exception ex)
-            {
-                Log.Logger.ServiceLog.Error(ex.Message);
-                throw;
-            }
-        }
-
-        /// <summary>
-        /// update comment
-        /// </summary>
-        /// <param name="commentId">comment id</param>
-        /// <param name="comment"></param>
-        [HttpPut]
-        [Route("{id}/comments/{commentId}")]
-        public void UpdateComment(Guid commentId, Comment comment)
-        {
-            try
-            {
-                _commentsRepository.UpdateComment(commentId, comment);
-            }
-            catch (Exception ex)
-            {
-                Log.Logger.ServiceLog.Error(ex.Message);
-                throw;
-            }
         }
     }
 }
