@@ -4,13 +4,14 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using RBox.Model;
+using RBox.WinForms.Extensions;
 
 namespace RBox.WinForms
 {
     public partial class MainWindow : Form
     {
         private ServiceClient _client;
-        private Guid _currFile;
+        private File _currFile;
 
         public MainWindow()
         {
@@ -48,10 +49,11 @@ namespace RBox.WinForms
                 {
                     var share = new Share
                     {
-                        FileId = _currFile,
+                        FileId = _currFile.FileId,
                         UserId = formShare.UserId
                     };
                     _client.CreateShare(share);
+                    rtbLogs.AppendLine(@"You shared a file " + _currFile.Name + " with the user " + formShare.UserLogin, Color.DarkGreen);
                 }
                 else if (formShare.UserId != Guid.Empty)
                 {
@@ -60,7 +62,7 @@ namespace RBox.WinForms
             }
             catch (Exception ex)
             {
-                MessageBox.Show(@"Error: " + Environment.NewLine + ex.Message, @"Failed to share file", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                rtbLogs.AppendLine(@"Error: " + ex.Message, Color.Red);
             }
             UpdateUserInformation();
         }
@@ -69,7 +71,15 @@ namespace RBox.WinForms
         {
             if (MessageBox.Show(@"Are you shure?", @"Delete file", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
-                _client.DeleteFile(_currFile);
+                try
+                {
+                    _client.DeleteFile(_currFile.FileId);
+                    rtbLogs.AppendLine(@"File " + _currFile.Name + " has been successfully deleted", Color.DarkGreen);
+                }
+                catch (Exception ex)
+                {
+                    rtbLogs.AppendLine(@"Error: " + ex.Message, Color.Red);
+                }
             }
             UpdateUserInformation();
         }
@@ -88,13 +98,14 @@ namespace RBox.WinForms
                         {
                             var content = _client.DownloadFile(item.FileId);
                             System.IO.File.WriteAllBytes(dialog.FileName, content);
+                            rtbLogs.AppendLine(@"File " + item.Name + " has been successfully downloaded", Color.DarkGreen);
                         }
                     }
                 }
             }
-            catch (Exception exception)
+            catch (Exception ex)
             {
-                MessageBox.Show(@"Error: " + Environment.NewLine + exception.Message, @"Failed to download file", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                rtbLogs.AppendLine(@"Error: " + ex.Message, Color.Red);
             }
         }
 
@@ -116,21 +127,46 @@ namespace RBox.WinForms
                 Location = new Point(Location.X, Location.Y)
             };
 
-            await Task.Run(() =>
+            try
             {
-                formLogin.ShowDialog();
-            });
+                await Task.Run(() =>
+                {
+                    formLogin.ShowDialog();
+                });
+                if (_client.CurrentUser != null)
+                {
+                    rtbLogs.AppendLine(@"User " + _client.CurrentUser.Name + " was logged in", Color.DarkGreen);
+                }
+            }
+            catch (Exception ex)
+            {
+                rtbLogs.AppendLine(@"Error: " + ex.Message, Color.Red);
+            }
             UpdateUserInformation();
         }
 
         private async void tsmItemRegister_Click(object sender, EventArgs e)
         {
-            var formRegister = new FormRegister
+            try
             {
-                StartPosition = FormStartPosition.Manual,
-                Location = new Point(Location.X, Location.Y)
-            };
-            await Task.Run(() => formRegister.ShowDialog());
+                var formRegister = new FormRegister
+                {
+                    StartPosition = FormStartPosition.Manual,
+                    Location = new Point(Location.X, Location.Y)
+                };
+                await Task.Run(() => formRegister.ShowDialog());
+
+                if (_client.CurrentUser != null)
+                {
+                    rtbLogs.AppendLine(@"User " + _client.CurrentUser.Name + " created", Color.DarkGreen);
+                    rtbLogs.AppendLine(@"User " + _client.CurrentUser.Name +" was logged in", Color.DarkGreen);
+                }
+            }
+            catch (Exception ex)
+            {
+                rtbLogs.AppendLine(@"Error: " + ex.Message, Color.Red);
+
+            }
             UpdateUserInformation();
         }
 
@@ -148,7 +184,7 @@ namespace RBox.WinForms
 
         private void LbFiles_SelectedIndexChanged(object sender, EventArgs e)
         {
-            _currFile = ((File)LbFiles.SelectedItem).FileId;
+            _currFile = (File)LbFiles.SelectedItem;
         }
 
         private void LbFiles_DrawItem(object sender, DrawItemEventArgs e)
@@ -159,7 +195,7 @@ namespace RBox.WinForms
             }
             else
             {
-                e.Graphics.FillRectangle(new SolidBrush(DefaultBackColor), e.Bounds);
+                e.Graphics.FillRectangle(new SolidBrush(LbFiles.BackColor), e.Bounds);
             }
 
             var font = new Font(FontFamily.GenericSansSerif, Font.Size + 3, FontStyle.Regular);
@@ -225,12 +261,14 @@ namespace RBox.WinForms
 
                         var fileId = _client.CreateFile(file);
                         _client.UploadFileContent(fileId, fileContent);
+
+                        rtbLogs.AppendLine(@"File successfully uploaded", Color.DarkGreen);
                     }
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show(@"Error: " + Environment.NewLine + ex.Message, @"File was not uploaded", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                rtbLogs.AppendLine(@"Error: " + ex.Message, Color.Red);
             }
 
             UpdateUserInformation();

@@ -48,9 +48,9 @@
             this.labelUserLogin.AutoSize = true;
             this.labelUserLogin.Location = new System.Drawing.Point(12, 9);
             this.labelUserLogin.Name = "labelUserLogin";
-            this.labelUserLogin.Size = new System.Drawing.Size(58, 13);
+            this.labelUserLogin.Size = new System.Drawing.Size(54, 13);
             this.labelUserLogin.TabIndex = 14;
-            this.labelUserLogin.Text = "User name";
+            this.labelUserLogin.Text = "User login";
             // 
             // tbUserLogin
             // 

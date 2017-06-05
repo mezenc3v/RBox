@@ -42,10 +42,10 @@
             this.btnShare = new System.Windows.Forms.Button();
             this.btnUpdate = new System.Windows.Forms.Button();
             this.labelCurrUser = new System.Windows.Forms.Label();
-            this.tbLogs = new System.Windows.Forms.TextBox();
             this.btnDownload = new System.Windows.Forms.Button();
             this.btnAddFile = new System.Windows.Forms.Button();
             this.ttHelpMessages = new System.Windows.Forms.ToolTip(this.components);
+            this.rtbLogs = new System.Windows.Forms.RichTextBox();
             this.MainMenu.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -86,28 +86,28 @@
             // tsmItemLogin
             // 
             this.tsmItemLogin.Name = "tsmItemLogin";
-            this.tsmItemLogin.Size = new System.Drawing.Size(152, 22);
+            this.tsmItemLogin.Size = new System.Drawing.Size(116, 22);
             this.tsmItemLogin.Text = "Login";
             this.tsmItemLogin.Click += new System.EventHandler(this.tsmItemLogin_Click);
             // 
             // tsmItemRegister
             // 
             this.tsmItemRegister.Name = "tsmItemRegister";
-            this.tsmItemRegister.Size = new System.Drawing.Size(152, 22);
+            this.tsmItemRegister.Size = new System.Drawing.Size(116, 22);
             this.tsmItemRegister.Text = "Register";
             this.tsmItemRegister.Click += new System.EventHandler(this.tsmItemRegister_Click);
             // 
             // tsmItemLogOut
             // 
             this.tsmItemLogOut.Name = "tsmItemLogOut";
-            this.tsmItemLogOut.Size = new System.Drawing.Size(152, 22);
+            this.tsmItemLogOut.Size = new System.Drawing.Size(116, 22);
             this.tsmItemLogOut.Text = "Log out";
             this.tsmItemLogOut.Click += new System.EventHandler(this.tsmItemCloseUser_Click);
             // 
             // tsmItemAboutExit
             // 
             this.tsmItemAboutExit.Name = "tsmItemAboutExit";
-            this.tsmItemAboutExit.Size = new System.Drawing.Size(152, 22);
+            this.tsmItemAboutExit.Size = new System.Drawing.Size(116, 22);
             this.tsmItemAboutExit.Text = "Exit";
             this.tsmItemAboutExit.Click += new System.EventHandler(this.tsmItemAboutExit_Click);
             // 
@@ -122,7 +122,7 @@
             // tsmItemAbout
             // 
             this.tsmItemAbout.Name = "tsmItemAbout";
-            this.tsmItemAbout.Size = new System.Drawing.Size(152, 22);
+            this.tsmItemAbout.Size = new System.Drawing.Size(107, 22);
             this.tsmItemAbout.Text = "About";
             this.tsmItemAbout.Click += new System.EventHandler(this.tsmItemAbout_Click);
             // 
@@ -173,16 +173,6 @@
             this.labelCurrUser.Text = "    ";
             this.labelCurrUser.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // tbLogs
-            // 
-            this.tbLogs.Location = new System.Drawing.Point(12, 369);
-            this.tbLogs.Multiline = true;
-            this.tbLogs.Name = "tbLogs";
-            this.tbLogs.ReadOnly = true;
-            this.tbLogs.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.tbLogs.Size = new System.Drawing.Size(374, 73);
-            this.tbLogs.TabIndex = 7;
-            // 
             // btnDownload
             // 
             this.btnDownload.BackColor = System.Drawing.Color.Transparent;
@@ -207,14 +197,23 @@
             this.btnAddFile.UseVisualStyleBackColor = false;
             this.btnAddFile.Click += new System.EventHandler(this.btnAddFile_Click);
             // 
+            // rtbLogs
+            // 
+            this.rtbLogs.Location = new System.Drawing.Point(12, 369);
+            this.rtbLogs.Name = "rtbLogs";
+            this.rtbLogs.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
+            this.rtbLogs.Size = new System.Drawing.Size(374, 69);
+            this.rtbLogs.TabIndex = 9;
+            this.rtbLogs.Text = "";
+            // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(395, 450);
+            this.Controls.Add(this.rtbLogs);
             this.Controls.Add(this.btnAddFile);
-            this.Controls.Add(this.tbLogs);
             this.Controls.Add(this.labelCurrUser);
             this.Controls.Add(this.btnUpdate);
             this.Controls.Add(this.btnShare);
@@ -224,6 +223,7 @@
             this.Controls.Add(this.MainMenu);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MainMenuStrip = this.MainMenu;
+            this.MaximizeBox = false;
             this.Name = "MainWindow";
             this.Text = "RBox";
             this.Load += new System.EventHandler(this.MainWindow_Load);
@@ -250,9 +250,9 @@
         private System.Windows.Forms.ToolStripMenuItem tsmItemRegister;
         private System.Windows.Forms.Button btnUpdate;
         private System.Windows.Forms.Label labelCurrUser;
-        private System.Windows.Forms.TextBox tbLogs;
         private System.Windows.Forms.Button btnAddFile;
         private System.Windows.Forms.ToolTip ttHelpMessages;
+        private System.Windows.Forms.RichTextBox rtbLogs;
     }
 }
 

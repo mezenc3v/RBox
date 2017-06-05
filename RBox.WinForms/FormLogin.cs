@@ -35,9 +35,9 @@ namespace RBox.WinForms
                     GetUser();
                     Close();
                 }
-                catch (Exception ex)
+                catch
                 {
-                    MessageBox.Show(@"Error: " + ex.Message);
+                    throw new Exception("Specified user does not exist");
                 }
             }
         }

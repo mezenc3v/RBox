@@ -35,28 +35,28 @@ namespace RBox.WinForms
             var check = CheckFields();
             if (check)
             {
-                CreateUser();
-                Close();
+                try
+                {
+                    CreateUser();
+                    Close();
+                }
+                catch
+                {
+                    throw new Exception("User already exists");
+                }
             }
         }
 
         private void CreateUser()
         {
-            try
+            var user = new User
             {
-                var user = new User
-                {
-                    Name = tbName.Text,
-                    Password = tbPassword.Text,
-                    UserLogin = tbLogin.Text
-                };
-                var client = new ServiceClient();
-                client.CreateUser(user);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(@"Error: " + ex.Message);
-            }
+                Name = tbName.Text,
+                Password = tbPassword.Text,
+                UserLogin = tbLogin.Text
+            };
+            var client = new ServiceClient();
+            client.CreateUser(user);
         }
 
         private bool CheckFields()

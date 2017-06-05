@@ -7,6 +7,7 @@ namespace RBox.WinForms
     public partial class FormCreateShare : Form
     {
         public Guid UserId;
+        public string UserLogin;
 
         public FormCreateShare()
         {
@@ -22,38 +23,31 @@ namespace RBox.WinForms
                 {
                     var user = FindUser();
                     UserId = user.UserId;
+                    UserLogin = user.UserLogin;
                     Close();
                 }
             }
             catch
             {
-                MessageBox.Show(@"Error: User not found", @"Failed to share file", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                throw new Exception("User not found");
             }
         }
 
         private User FindUser()
         {
-            try
+            var user = new User
             {
-                var user = new User
-                {
-                    UserLogin = tbUserLogin.Text
-                };
-                var client = new ServiceClient();
-                return client.FindUser(user);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(@"Error: " + ex.Message);
-                throw;
-            }
+                UserLogin = tbUserLogin.Text
+            };
+            var client = new ServiceClient();
+            return client.FindUser(user);
         }
 
         private bool CheckUserName()
         {
             if (tbUserLogin.Text == "")
             {
-                MessageBox.Show(@"enter username");
+                MessageBox.Show(@"enter userlogin");
                 return false;
             }
             return true;
