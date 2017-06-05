@@ -34,16 +34,18 @@
             this.tsmUser = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmItemLogin = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmItemRegister = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmItemCloseUser = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsmItemLogOut = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmItemAboutExit = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmFiles = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsmItemAddFile = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmHelp = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmItemAbout = new System.Windows.Forms.ToolStripMenuItem();
-            this.btnDownload = new System.Windows.Forms.Button();
             this.btnDelete = new System.Windows.Forms.Button();
             this.btnShare = new System.Windows.Forms.Button();
-            this.toolTip = new System.Windows.Forms.ToolTip(this.components);
+            this.btnUpdate = new System.Windows.Forms.Button();
+            this.labelCurrUser = new System.Windows.Forms.Label();
+            this.tbLogs = new System.Windows.Forms.TextBox();
+            this.btnDownload = new System.Windows.Forms.Button();
+            this.btnAddFile = new System.Windows.Forms.Button();
+            this.ttHelpMessages = new System.Windows.Forms.ToolTip(this.components);
             this.MainMenu.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -53,7 +55,7 @@
             this.LbFiles.FormattingEnabled = true;
             this.LbFiles.Location = new System.Drawing.Point(12, 27);
             this.LbFiles.Name = "LbFiles";
-            this.LbFiles.Size = new System.Drawing.Size(312, 303);
+            this.LbFiles.Size = new System.Drawing.Size(374, 264);
             this.LbFiles.TabIndex = 0;
             this.LbFiles.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.LbFiles_DrawItem);
             this.LbFiles.SelectedIndexChanged += new System.EventHandler(this.LbFiles_SelectedIndexChanged);
@@ -63,13 +65,11 @@
             // 
             this.MainMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsmUser,
-            this.tsmFiles,
             this.tsmHelp});
             this.MainMenu.Location = new System.Drawing.Point(0, 0);
             this.MainMenu.Name = "MainMenu";
-            this.MainMenu.Size = new System.Drawing.Size(337, 24);
+            this.MainMenu.Size = new System.Drawing.Size(395, 24);
             this.MainMenu.TabIndex = 1;
-            this.MainMenu.Text = "menuStrip1";
             this.MainMenu.MouseMove += new System.Windows.Forms.MouseEventHandler(this.MainMenu_MouseMove);
             // 
             // tsmUser
@@ -77,7 +77,7 @@
             this.tsmUser.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tsmItemLogin,
             this.tsmItemRegister,
-            this.tsmItemCloseUser,
+            this.tsmItemLogOut,
             this.tsmItemAboutExit});
             this.tsmUser.Name = "tsmUser";
             this.tsmUser.Size = new System.Drawing.Size(42, 20);
@@ -97,12 +97,12 @@
             this.tsmItemRegister.Text = "Register";
             this.tsmItemRegister.Click += new System.EventHandler(this.tsmItemRegister_Click);
             // 
-            // tsmItemCloseUser
+            // tsmItemLogOut
             // 
-            this.tsmItemCloseUser.Name = "tsmItemCloseUser";
-            this.tsmItemCloseUser.Size = new System.Drawing.Size(152, 22);
-            this.tsmItemCloseUser.Text = "Close User";
-            this.tsmItemCloseUser.Click += new System.EventHandler(this.tsmItemCloseUser_Click);
+            this.tsmItemLogOut.Name = "tsmItemLogOut";
+            this.tsmItemLogOut.Size = new System.Drawing.Size(152, 22);
+            this.tsmItemLogOut.Text = "Log out";
+            this.tsmItemLogOut.Click += new System.EventHandler(this.tsmItemCloseUser_Click);
             // 
             // tsmItemAboutExit
             // 
@@ -110,21 +110,6 @@
             this.tsmItemAboutExit.Size = new System.Drawing.Size(152, 22);
             this.tsmItemAboutExit.Text = "Exit";
             this.tsmItemAboutExit.Click += new System.EventHandler(this.tsmItemAboutExit_Click);
-            // 
-            // tsmFiles
-            // 
-            this.tsmFiles.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.tsmItemAddFile});
-            this.tsmFiles.Name = "tsmFiles";
-            this.tsmFiles.Size = new System.Drawing.Size(42, 20);
-            this.tsmFiles.Text = "Files";
-            // 
-            // tsmItemAddFile
-            // 
-            this.tsmItemAddFile.Name = "tsmItemAddFile";
-            this.tsmItemAddFile.Size = new System.Drawing.Size(152, 22);
-            this.tsmItemAddFile.Text = "Add file";
-            this.tsmItemAddFile.Click += new System.EventHandler(this.tsmItemAddFile_Click);
             // 
             // tsmHelp
             // 
@@ -137,45 +122,101 @@
             // tsmItemAbout
             // 
             this.tsmItemAbout.Name = "tsmItemAbout";
-            this.tsmItemAbout.Size = new System.Drawing.Size(107, 22);
+            this.tsmItemAbout.Size = new System.Drawing.Size(152, 22);
             this.tsmItemAbout.Text = "About";
             this.tsmItemAbout.Click += new System.EventHandler(this.tsmItemAbout_Click);
             // 
-            // btnDownload
-            // 
-            this.btnDownload.Location = new System.Drawing.Point(12, 336);
-            this.btnDownload.Name = "btnDownload";
-            this.btnDownload.Size = new System.Drawing.Size(100, 23);
-            this.btnDownload.TabIndex = 2;
-            this.btnDownload.Text = "Download";
-            this.btnDownload.UseVisualStyleBackColor = true;
-            this.btnDownload.Click += new System.EventHandler(this.btnDownload_Click);
-            // 
             // btnDelete
             // 
-            this.btnDelete.Location = new System.Drawing.Point(118, 336);
+            this.btnDelete.BackColor = System.Drawing.Color.Transparent;
+            this.btnDelete.BackgroundImage = global::RBox.WinForms.Properties.Resources.Delete;
+            this.btnDelete.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnDelete.Location = new System.Drawing.Point(164, 293);
             this.btnDelete.Name = "btnDelete";
-            this.btnDelete.Size = new System.Drawing.Size(100, 23);
+            this.btnDelete.Size = new System.Drawing.Size(70, 70);
             this.btnDelete.TabIndex = 3;
-            this.btnDelete.Text = "Delete";
-            this.btnDelete.UseVisualStyleBackColor = true;
+            this.btnDelete.UseVisualStyleBackColor = false;
             this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
             // 
             // btnShare
             // 
-            this.btnShare.Location = new System.Drawing.Point(224, 336);
+            this.btnShare.BackColor = System.Drawing.Color.Transparent;
+            this.btnShare.BackgroundImage = global::RBox.WinForms.Properties.Resources.Share;
+            this.btnShare.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnShare.Location = new System.Drawing.Point(240, 293);
             this.btnShare.Name = "btnShare";
-            this.btnShare.Size = new System.Drawing.Size(100, 23);
+            this.btnShare.Size = new System.Drawing.Size(70, 70);
             this.btnShare.TabIndex = 4;
-            this.btnShare.Text = "Share";
-            this.btnShare.UseVisualStyleBackColor = true;
+            this.btnShare.UseVisualStyleBackColor = false;
             this.btnShare.Click += new System.EventHandler(this.btnShare_Click);
+            // 
+            // btnUpdate
+            // 
+            this.btnUpdate.BackColor = System.Drawing.Color.Transparent;
+            this.btnUpdate.BackgroundImage = global::RBox.WinForms.Properties.Resources.Refresh;
+            this.btnUpdate.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnUpdate.Location = new System.Drawing.Point(316, 293);
+            this.btnUpdate.Name = "btnUpdate";
+            this.btnUpdate.Size = new System.Drawing.Size(70, 70);
+            this.btnUpdate.TabIndex = 5;
+            this.btnUpdate.UseVisualStyleBackColor = false;
+            this.btnUpdate.Click += new System.EventHandler(this.btnUpdate_Click);
+            // 
+            // labelCurrUser
+            // 
+            this.labelCurrUser.BackColor = System.Drawing.Color.Transparent;
+            this.labelCurrUser.Location = new System.Drawing.Point(289, 9);
+            this.labelCurrUser.Name = "labelCurrUser";
+            this.labelCurrUser.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.labelCurrUser.Size = new System.Drawing.Size(100, 13);
+            this.labelCurrUser.TabIndex = 6;
+            this.labelCurrUser.Text = "    ";
+            this.labelCurrUser.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // tbLogs
+            // 
+            this.tbLogs.Location = new System.Drawing.Point(12, 369);
+            this.tbLogs.Multiline = true;
+            this.tbLogs.Name = "tbLogs";
+            this.tbLogs.ReadOnly = true;
+            this.tbLogs.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.tbLogs.Size = new System.Drawing.Size(374, 73);
+            this.tbLogs.TabIndex = 7;
+            // 
+            // btnDownload
+            // 
+            this.btnDownload.BackColor = System.Drawing.Color.Transparent;
+            this.btnDownload.BackgroundImage = global::RBox.WinForms.Properties.Resources.Download;
+            this.btnDownload.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnDownload.Location = new System.Drawing.Point(88, 293);
+            this.btnDownload.Name = "btnDownload";
+            this.btnDownload.Size = new System.Drawing.Size(70, 70);
+            this.btnDownload.TabIndex = 2;
+            this.btnDownload.UseVisualStyleBackColor = false;
+            this.btnDownload.Click += new System.EventHandler(this.btnDownload_Click);
+            // 
+            // btnAddFile
+            // 
+            this.btnAddFile.BackColor = System.Drawing.Color.Transparent;
+            this.btnAddFile.BackgroundImage = global::RBox.WinForms.Properties.Resources.Add;
+            this.btnAddFile.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnAddFile.Location = new System.Drawing.Point(12, 293);
+            this.btnAddFile.Name = "btnAddFile";
+            this.btnAddFile.Size = new System.Drawing.Size(70, 70);
+            this.btnAddFile.TabIndex = 8;
+            this.btnAddFile.UseVisualStyleBackColor = false;
+            this.btnAddFile.Click += new System.EventHandler(this.btnAddFile_Click);
             // 
             // MainWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(337, 366);
+            this.BackColor = System.Drawing.SystemColors.Control;
+            this.ClientSize = new System.Drawing.Size(395, 450);
+            this.Controls.Add(this.btnAddFile);
+            this.Controls.Add(this.tbLogs);
+            this.Controls.Add(this.labelCurrUser);
+            this.Controls.Add(this.btnUpdate);
             this.Controls.Add(this.btnShare);
             this.Controls.Add(this.btnDelete);
             this.Controls.Add(this.btnDownload);
@@ -199,17 +240,19 @@
         private System.Windows.Forms.MenuStrip MainMenu;
         private System.Windows.Forms.ToolStripMenuItem tsmUser;
         private System.Windows.Forms.ToolStripMenuItem tsmItemLogin;
-        private System.Windows.Forms.ToolStripMenuItem tsmItemCloseUser;
+        private System.Windows.Forms.ToolStripMenuItem tsmItemLogOut;
         private System.Windows.Forms.ToolStripMenuItem tsmItemAboutExit;
-        private System.Windows.Forms.ToolStripMenuItem tsmFiles;
-        private System.Windows.Forms.ToolStripMenuItem tsmItemAddFile;
         private System.Windows.Forms.ToolStripMenuItem tsmHelp;
         private System.Windows.Forms.ToolStripMenuItem tsmItemAbout;
         private System.Windows.Forms.Button btnDownload;
         private System.Windows.Forms.Button btnDelete;
         private System.Windows.Forms.Button btnShare;
         private System.Windows.Forms.ToolStripMenuItem tsmItemRegister;
-        private System.Windows.Forms.ToolTip toolTip;
+        private System.Windows.Forms.Button btnUpdate;
+        private System.Windows.Forms.Label labelCurrUser;
+        private System.Windows.Forms.TextBox tbLogs;
+        private System.Windows.Forms.Button btnAddFile;
+        private System.Windows.Forms.ToolTip ttHelpMessages;
     }
 }
 

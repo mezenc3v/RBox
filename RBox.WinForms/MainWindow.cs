@@ -15,12 +15,20 @@ namespace RBox.WinForms
         public MainWindow()
         {
             InitializeComponent();
-            LbFiles.DisplayMember = "Name";
             LbFiles.ItemHeight = 30;
         }
 
         private void MainWindow_Load(object sender, EventArgs e)
         {
+            ttHelpMessages.SetToolTip(btnAddFile, "Add file");
+            ttHelpMessages.SetToolTip(btnDelete, "Delete file");
+            ttHelpMessages.SetToolTip(btnDownload, "Download file");
+            ttHelpMessages.SetToolTip(btnShare, "Share file");
+            ttHelpMessages.SetToolTip(btnUpdate, "Update file list");
+
+            MainMenu.BackColor = ColorTranslator.FromHtml("#CBDCEF");
+            BackColor = MainMenu.BackColor = ColorTranslator.FromHtml("#CBDCEF");
+
             _client = new ServiceClient();
             CheckMenu();
             CheckButtons();
@@ -30,9 +38,13 @@ namespace RBox.WinForms
         {
             try
             {
-                var formShare = new FormCreateShare();
+                var formShare = new FormCreateShare
+                {
+                    StartPosition = FormStartPosition.Manual,
+                    Location = new Point(Location.X, Location.Y)
+                };
                 await Task.Run(() => formShare.ShowDialog());
-                if (formShare.UserId != _client.UserId && formShare.UserId != Guid.Empty)
+                if (formShare.UserId != _client.CurrentUser.UserId && formShare.UserId != Guid.Empty)
                 {
                     var share = new Share
                     {
@@ -50,7 +62,7 @@ namespace RBox.WinForms
             {
                 MessageBox.Show(@"Error: " + Environment.NewLine + ex.Message, @"Failed to share file", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            UpdateUserData();
+            UpdateUserInformation();
         }
 
         private void btnDelete_Click(object sender, EventArgs e)
@@ -59,7 +71,7 @@ namespace RBox.WinForms
             {
                 _client.DeleteFile(_currFile);
             }
-            UpdateUserData();
+            UpdateUserInformation();
         }
 
         private void btnDownload_Click(object sender, EventArgs e)
@@ -88,82 +100,50 @@ namespace RBox.WinForms
 
         private void tsmItemAbout_Click(object sender, EventArgs e)
         {
-            var aboutForm = new FormAbout();
+            var aboutForm = new FormAbout
+            {
+                StartPosition = FormStartPosition.Manual,
+                Location = new Point(Location.X, Location.Y)
+            };
             aboutForm.Show();
         }
 
         private async void tsmItemLogin_Click(object sender, EventArgs e)
         {
-            var formLogin = new FormLogin();
-            await Task.Run(() => formLogin.ShowDialog());
-            UpdateUserData();
+            var formLogin = new FormLogin
+            {
+                StartPosition = FormStartPosition.Manual,
+                Location = new Point(Location.X, Location.Y)
+            };
+
+            await Task.Run(() =>
+            {
+                formLogin.ShowDialog();
+            });
+            UpdateUserInformation();
         }
 
         private async void tsmItemRegister_Click(object sender, EventArgs e)
         {
-            var formRegister = new FormRegister();
+            var formRegister = new FormRegister
+            {
+                StartPosition = FormStartPosition.Manual,
+                Location = new Point(Location.X, Location.Y)
+            };
             await Task.Run(() => formRegister.ShowDialog());
-            UpdateUserData();
-        }
-
-        private async void tsmItemAddFile_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                var formUploadFile = new FormUploadFile();
-                var formFileDescription = new FormFileDescription();
-
-                await Task.Run(() => formUploadFile.ShowDialog());
-                if (formUploadFile.FileName != null)
-                {
-                    var fileContent = formUploadFile.FileContent;
-
-                    await Task.Run(() => formFileDescription.ShowDialog());
-                    var file = new File
-                    {
-                        Description = formFileDescription.FileDescription,
-                        Name = formUploadFile.FileName,
-                        UserId = _client.UserId
-                    };
-
-                    var fileId = _client.CreateFile(file);
-                    _client.UploadFileContent(fileId, fileContent);
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(@"Error: " + Environment.NewLine + ex.Message, @"File was not uploaded", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-
-            UpdateUserData();
+            UpdateUserInformation();
         }
 
         private void tsmItemCloseUser_Click(object sender, EventArgs e)
         {
             _client?.CloseUser();
-            UpdateUserData();
+            UpdateUserInformation();
         }
 
         private void tsmItemAboutExit_Click(object sender, EventArgs e)
         {
             _client?.CloseUser();
             Close();
-        }
-
-        private void UpdateUserData()
-        {
-            if (_client == null || _client.UserId == Guid.Empty)
-            {
-                var files = _client?.GetUserFiles();
-                var shares = _client?.GetSharedFiles();
-
-                LbFiles.DataSource = files?.Concat(shares).ToArray();
-            }
-            else
-            {
-                LbFiles.DataSource = new File[0];
-            }
-            CheckButtons();
         }
 
         private void LbFiles_SelectedIndexChanged(object sender, EventArgs e)
@@ -175,7 +155,7 @@ namespace RBox.WinForms
         {
             if ((e.State & DrawItemState.Selected) == DrawItemState.Selected)
             {
-                e.Graphics.FillRectangle(Brushes.LightSteelBlue, e.Bounds);
+                e.Graphics.FillRectangle(new SolidBrush(ColorTranslator.FromHtml("#BCD1EA")), e.Bounds);
             }
             else
             {
@@ -188,7 +168,6 @@ namespace RBox.WinForms
                 e.Graphics.DrawString(((File)LbFiles.Items[e.Index]).Name,
                     font, Brushes.Black, e.Bounds.X, e.Bounds.Y);
             }
-
             e.DrawFocusRectangle();
         }
 
@@ -201,11 +180,11 @@ namespace RBox.WinForms
             {
                 var toolTipString = ((File)lb.Items[index]).Description;
 
-                if (toolTip.GetToolTip(lb) != toolTipString)
-                    toolTip.SetToolTip(lb, toolTipString);
+                if (ttHelpMessages.GetToolTip(lb) != toolTipString)
+                    ttHelpMessages.SetToolTip(lb, toolTipString);
             }
             else
-                toolTip.Hide(lb);
+                ttHelpMessages.Hide(lb);
         }
 
         private void MainMenu_MouseMove(object sender, MouseEventArgs e)
@@ -213,20 +192,62 @@ namespace RBox.WinForms
             CheckMenu();
         }
 
+        private void btnUpdate_Click(object sender, EventArgs e)
+        {
+            UpdateUserInformation();
+        }
+
+        private async void btnAddFile_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                var openFileDialog = new OpenFileDialog();
+
+                if (openFileDialog.ShowDialog() == DialogResult.OK)
+                {
+                    if (openFileDialog.SafeFileName != null)
+                    {
+                        var fileContent = System.IO.File.ReadAllBytes(openFileDialog.FileName);
+
+                        var formFileDescription = new FormFileDescription
+                        {
+                            StartPosition = FormStartPosition.Manual,
+                            Location = new Point(Location.X, Location.Y)
+                        };
+
+                        await Task.Run(() => formFileDescription.ShowDialog());
+                        var file = new File
+                        {
+                            Description = formFileDescription.FileDescription,
+                            Name = openFileDialog.SafeFileName,
+                            UserId = _client.CurrentUser.UserId
+                        };
+
+                        var fileId = _client.CreateFile(file);
+                        _client.UploadFileContent(fileId, fileContent);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(@"Error: " + Environment.NewLine + ex.Message, @"File was not uploaded", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+            UpdateUserInformation();
+        }
+
         private void CheckMenu()
         {
-            if (_client == null || _client.UserId == Guid.Empty)
+            if (_client?.CurrentUser == null)
             {
-                tsmItemCloseUser.Enabled = false;
-                tsmItemAddFile.Enabled = false;
+                tsmItemLogOut.Enabled = false;
 
                 tsmItemRegister.Enabled = true;
                 tsmItemLogin.Enabled = true;
             }
             else
             {
-                tsmItemCloseUser.Enabled = true;
-                tsmItemAddFile.Enabled = true;
+                tsmItemLogOut.Enabled = true;
 
                 tsmItemRegister.Enabled = false;
                 tsmItemLogin.Enabled = false;
@@ -235,7 +256,24 @@ namespace RBox.WinForms
 
         private void CheckButtons()
         {
-            if (_client == null || _client.UserId == Guid.Empty)
+            if (_client?.CurrentUser == null)
+            {
+                btnAddFile.Enabled = false;
+                btnDelete.Enabled = false;
+                btnDownload.Enabled = false;
+                btnShare.Enabled = false;
+                btnUpdate.Enabled = false;
+            }
+            else
+            {
+                btnAddFile.Enabled = true;
+                btnDelete.Enabled = true;
+                btnDownload.Enabled = true;
+                btnShare.Enabled = true;
+                btnUpdate.Enabled = true;
+            }
+
+            if (LbFiles.Items.Count == 0)
             {
                 btnDelete.Enabled = false;
                 btnDownload.Enabled = false;
@@ -247,6 +285,25 @@ namespace RBox.WinForms
                 btnDownload.Enabled = true;
                 btnShare.Enabled = true;
             }
+        }
+
+        private void UpdateUserInformation()
+        {
+            if (_client?.CurrentUser != null)
+            {
+                var files = _client?.GetUserFiles();
+                var shares = _client?.GetSharedFiles();
+
+                LbFiles.DataSource = files?.Concat(shares).ToArray();
+
+                labelCurrUser.Text = _client.CurrentUser.UserLogin;
+            }
+            else
+            {
+                LbFiles.DataSource = new File[0];
+                labelCurrUser.Text = "";
+            }
+            CheckButtons();
         }
     }
 }

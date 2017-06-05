@@ -36,6 +36,7 @@ namespace RBox.WinForms
             if (check)
             {
                 CreateUser();
+                Close();
             }
         }
 
@@ -55,7 +56,6 @@ namespace RBox.WinForms
             catch (Exception ex)
             {
                 MessageBox.Show(@"Error: " + ex.Message);
-                throw;
             }
         }
 

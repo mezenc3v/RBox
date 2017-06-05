@@ -11,10 +11,10 @@ namespace RBox.WinForms
 {
     public class ServiceClient
     {
-        public Guid UserId => _currUserId;
+        public User CurrentUser => _currentUser;
+        private static User _currentUser;
 
         private const string ConnectionString = "http://localhost:52908/";
-        private static Guid _currUserId;
         private static HttpClient _client;
 
         public ServiceClient()
@@ -30,7 +30,7 @@ namespace RBox.WinForms
             {
                 var result = response.Content.ReadAsAsync<User>().Result;
                 ////////////////////////////
-                _currUserId = result.UserId;
+                _currentUser = result;
                 /////////////////////////////
                 return result;
             }
@@ -44,7 +44,7 @@ namespace RBox.WinForms
             {
                 var result = response.Content.ReadAsAsync<User>().Result;
                 ////////////////////////////
-                _currUserId = result.UserId;
+                _currentUser = result;
                 /////////////////////////////
                 return result;
             }
@@ -53,7 +53,7 @@ namespace RBox.WinForms
 
         public void CloseUser()
         {
-            _currUserId = new Guid();
+            _currentUser = null;
             _client?.Dispose();
             _client = null;
         }
@@ -61,7 +61,7 @@ namespace RBox.WinForms
         public File[] GetUserFiles()
         {
             if (_client == null) return null;
-            var response = _client.GetAsync($"api/users/{_currUserId}/files").Result;
+            var response = _client.GetAsync($"api/users/{_currentUser.UserId}/files").Result;
             if (response.IsSuccessStatusCode)
             {
                 var result = response.Content.ReadAsAsync<File[]>().Result;
@@ -118,7 +118,7 @@ namespace RBox.WinForms
         public File[] GetSharedFiles()
         {
             if (_client == null) return null;
-            var response = _client.GetAsync($"api/users/{_currUserId}/shares").Result;
+            var response = _client.GetAsync($"api/users/{CurrentUser.UserId}/shares").Result;
             if (response.IsSuccessStatusCode)
             {
                 var result = response.Content.ReadAsAsync<File[]>().Result;
