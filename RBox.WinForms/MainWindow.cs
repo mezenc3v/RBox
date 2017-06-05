@@ -16,7 +16,6 @@ namespace RBox.WinForms
         public MainWindow()
         {
             InitializeComponent();
-            LbFiles.ItemHeight = 30;
         }
 
         private void MainWindow_Load(object sender, EventArgs e)
@@ -37,54 +36,59 @@ namespace RBox.WinForms
 
         private async void btnShare_Click(object sender, EventArgs e)
         {
-            try
+            var formShare = new FormCreateShare
             {
-                var formShare = new FormCreateShare
+                StartPosition = FormStartPosition.Manual,
+                Location = new Point(Location.X, Location.Y)
+            };
+            await Task.Run(() => formShare.ShowDialog());
+            if (formShare.UserId != _client.CurrentUser.UserId && formShare.UserId != Guid.Empty)
+            {
+                var share = new Share
                 {
-                    StartPosition = FormStartPosition.Manual,
-                    Location = new Point(Location.X, Location.Y)
+                    FileId = _currFile.FileId,
+                    UserId = formShare.UserId
                 };
-                await Task.Run(() => formShare.ShowDialog());
-                if (formShare.UserId != _client.CurrentUser.UserId && formShare.UserId != Guid.Empty)
-                {
-                    var share = new Share
-                    {
-                        FileId = _currFile.FileId,
-                        UserId = formShare.UserId
-                    };
-                    _client.CreateShare(share);
-                    rtbLogs.AppendLine(@"You shared a file " + _currFile.Name + " with the user " + formShare.UserLogin, Color.DarkGreen);
-                }
-                else if (formShare.UserId != Guid.Empty)
-                {
-                    MessageBox.Show(@"You are already the owner of this file", @"Failed to share file", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
+                _client.CreateShare(share);
+                rtbLogs.AppendLine(@"You shared a file " + _currFile.Name + " with the user " + formShare.UserLogin, Color.DarkGreen);
             }
-            catch (Exception ex)
+            else if (formShare.UserId != Guid.Empty)
             {
-                rtbLogs.AppendLine(@"Error: " + ex.Message, Color.Red);
+                rtbLogs.AppendLine(@"You are already the owner of this file", Color.Red);
             }
+            else
+            {
+                rtbLogs.AppendLine(@"User not found", Color.Red);
+            }
+
             UpdateUserInformation();
         }
 
-        private void btnDelete_Click(object sender, EventArgs e)
+        private async void btnDelete_Click(object sender, EventArgs e)
         {
             if (MessageBox.Show(@"Are you shure?", @"Delete file", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
                 try
                 {
-                    _client.DeleteFile(_currFile.FileId);
+                    rtbLogs.AppendLine(@"Deleting file, please wait...", Color.DarkGreen);
+                    DisableAllButtons();
+                    DisableMenu();
+
+                    await Task.Run(() => _client.DeleteFile(_currFile.FileId));
+
+                    EnableAllButtons();
+                    EnableMenu();
                     rtbLogs.AppendLine(@"File " + _currFile.Name + " has been successfully deleted", Color.DarkGreen);
                 }
-                catch (Exception ex)
+                catch
                 {
-                    rtbLogs.AppendLine(@"Error: " + ex.Message, Color.Red);
+                    rtbLogs.AppendLine(@"An error occurred while deleting the file", Color.Red);
                 }
             }
             UpdateUserInformation();
         }
 
-        private void btnDownload_Click(object sender, EventArgs e)
+        private async void btnDownload_Click(object sender, EventArgs e)
         {
             try
             {
@@ -96,16 +100,26 @@ namespace RBox.WinForms
                         dialog.FileName = item.Name;
                         if (dialog.ShowDialog() == DialogResult.OK)
                         {
-                            var content = _client.DownloadFile(item.FileId);
-                            System.IO.File.WriteAllBytes(dialog.FileName, content);
+                            rtbLogs.AppendLine(@"Downloading file, please wait...", Color.DarkGreen);
+
+                            DisableAllButtons();
+                            DisableMenu();
+                            await Task.Run(() =>
+                            {
+                                var content = _client.DownloadFile(item.FileId);
+                                System.IO.File.WriteAllBytes(dialog.FileName, content);
+                            });
+                            EnableAllButtons();
+                            EnableMenu();
+
                             rtbLogs.AppendLine(@"File " + item.Name + " has been successfully downloaded", Color.DarkGreen);
                         }
                     }
                 }
             }
-            catch (Exception ex)
+            catch
             {
-                rtbLogs.AppendLine(@"Error: " + ex.Message, Color.Red);
+                rtbLogs.AppendLine(@"File not found", Color.Red);
             }
         }
 
@@ -121,50 +135,56 @@ namespace RBox.WinForms
 
         private async void tsmItemLogin_Click(object sender, EventArgs e)
         {
+            DisableAllButtons();
+            DisableMenu();
+
             var formLogin = new FormLogin
             {
                 StartPosition = FormStartPosition.Manual,
                 Location = new Point(Location.X, Location.Y)
             };
 
-            try
+            await Task.Run(() =>
             {
-                await Task.Run(() =>
-                {
-                    formLogin.ShowDialog();
-                });
-                if (_client.CurrentUser != null)
-                {
-                    rtbLogs.AppendLine(@"User " + _client.CurrentUser.Name + " was logged in", Color.DarkGreen);
-                }
-            }
-            catch (Exception ex)
+                formLogin.ShowDialog();
+            });
+
+            if (_client.CurrentUser != null)
             {
-                rtbLogs.AppendLine(@"Error: " + ex.Message, Color.Red);
+                rtbLogs.AppendLine(@"User " + _client.CurrentUser.UserLogin + " was logged in", Color.DarkGreen);
             }
+            else
+            {
+                rtbLogs.AppendLine(@"Specified user does not exist", Color.Red);
+            }
+
+            EnableAllButtons();
+            EnableMenu();
             UpdateUserInformation();
         }
 
         private async void tsmItemRegister_Click(object sender, EventArgs e)
         {
-            try
+            var formRegister = new FormRegister
             {
-                var formRegister = new FormRegister
-                {
-                    StartPosition = FormStartPosition.Manual,
-                    Location = new Point(Location.X, Location.Y)
-                };
-                await Task.Run(() => formRegister.ShowDialog());
+                StartPosition = FormStartPosition.Manual,
+                Location = new Point(Location.X, Location.Y)
+            };
 
-                if (_client.CurrentUser != null)
-                {
-                    rtbLogs.AppendLine(@"User " + _client.CurrentUser.Name + " created", Color.DarkGreen);
-                    rtbLogs.AppendLine(@"User " + _client.CurrentUser.Name +" was logged in", Color.DarkGreen);
-                }
-            }
-            catch (Exception ex)
+            DisableAllButtons();
+            DisableMenu();
+            await Task.Run(() => formRegister.ShowDialog());
+            EnableAllButtons();
+            EnableMenu();
+
+            if (_client.CurrentUser != null)
             {
-                rtbLogs.AppendLine(@"Error: " + ex.Message, Color.Red);
+                rtbLogs.AppendLine(@"User " + _client.CurrentUser.UserLogin + " created", Color.DarkGreen);
+                rtbLogs.AppendLine(@"User " + _client.CurrentUser.UserLogin + " was logged in", Color.DarkGreen);
+            }
+            else
+            {
+                rtbLogs.AppendLine(@"User already exists", Color.Red);
 
             }
             UpdateUserInformation();
@@ -217,10 +237,14 @@ namespace RBox.WinForms
                 var toolTipString = ((File)lb.Items[index]).Description;
 
                 if (ttHelpMessages.GetToolTip(lb) != toolTipString)
+                {
                     ttHelpMessages.SetToolTip(lb, toolTipString);
+                }
             }
             else
+            {
                 ttHelpMessages.Hide(lb);
+            }
         }
 
         private void MainMenu_MouseMove(object sender, MouseEventArgs e)
@@ -230,7 +254,13 @@ namespace RBox.WinForms
 
         private void btnUpdate_Click(object sender, EventArgs e)
         {
+            DisableAllButtons();
+            DisableMenu();
             UpdateUserInformation();
+            EnableMenu();
+            EnableAllButtons();
+            CheckMenu();
+            CheckButtons();
         }
 
         private async void btnAddFile_Click(object sender, EventArgs e)
@@ -243,32 +273,13 @@ namespace RBox.WinForms
                 {
                     if (openFileDialog.SafeFileName != null)
                     {
-                        var fileContent = System.IO.File.ReadAllBytes(openFileDialog.FileName);
-
-                        var formFileDescription = new FormFileDescription
-                        {
-                            StartPosition = FormStartPosition.Manual,
-                            Location = new Point(Location.X, Location.Y)
-                        };
-
-                        await Task.Run(() => formFileDescription.ShowDialog());
-                        var file = new File
-                        {
-                            Description = formFileDescription.FileDescription,
-                            Name = openFileDialog.SafeFileName,
-                            UserId = _client.CurrentUser.UserId
-                        };
-
-                        var fileId = _client.CreateFile(file);
-                        _client.UploadFileContent(fileId, fileContent);
-
-                        rtbLogs.AppendLine(@"File successfully uploaded", Color.DarkGreen);
+                        await UploadFile(openFileDialog.FileName, openFileDialog.SafeFileName);
                     }
                 }
             }
-            catch (Exception ex)
+            catch
             {
-                rtbLogs.AppendLine(@"Error: " + ex.Message, Color.Red);
+                rtbLogs.AppendLine(@"Error uploading file", Color.Red);
             }
 
             UpdateUserInformation();
@@ -279,14 +290,12 @@ namespace RBox.WinForms
             if (_client?.CurrentUser == null)
             {
                 tsmItemLogOut.Enabled = false;
-
                 tsmItemRegister.Enabled = true;
                 tsmItemLogin.Enabled = true;
             }
             else
             {
                 tsmItemLogOut.Enabled = true;
-
                 tsmItemRegister.Enabled = false;
                 tsmItemLogin.Enabled = false;
             }
@@ -296,19 +305,11 @@ namespace RBox.WinForms
         {
             if (_client?.CurrentUser == null)
             {
-                btnAddFile.Enabled = false;
-                btnDelete.Enabled = false;
-                btnDownload.Enabled = false;
-                btnShare.Enabled = false;
-                btnUpdate.Enabled = false;
+                DisableAllButtons();
             }
             else
             {
-                btnAddFile.Enabled = true;
-                btnDelete.Enabled = true;
-                btnDownload.Enabled = true;
-                btnShare.Enabled = true;
-                btnUpdate.Enabled = true;
+                EnableAllButtons();
             }
 
             if (LbFiles.Items.Count == 0)
@@ -342,6 +343,96 @@ namespace RBox.WinForms
                 labelCurrUser.Text = "";
             }
             CheckButtons();
+        }
+
+        private void DisableAllButtons()
+        {
+            btnAddFile.Enabled = false;
+            btnDelete.Enabled = false;
+            btnDownload.Enabled = false;
+            btnShare.Enabled = false;
+            btnUpdate.Enabled = false;
+        }
+
+        private void EnableAllButtons()
+        {
+            btnAddFile.Enabled = true;
+            btnDelete.Enabled = true;
+            btnDownload.Enabled = true;
+            btnShare.Enabled = true;
+            btnUpdate.Enabled = true;
+        }
+
+        private void DisableMenu()
+        {
+            MainMenu.Enabled = false;
+        }
+
+        private void EnableMenu()
+        {
+            MainMenu.Enabled = true;
+        }
+
+        private async void LbFiles_DragDrop(object sender, DragEventArgs e)
+        {
+            var filePath = ((string[])e.Data.GetData(DataFormats.FileDrop, false)).Last();
+            var fileName = System.IO.Path.GetFileName(filePath);
+
+            try
+            {
+                await UploadFile(filePath, fileName);
+            }
+            catch
+            {
+                rtbLogs.AppendLine(@"Error uploading file", Color.Red);
+            }
+
+            UpdateUserInformation();
+        }
+
+        private void LbFiles_DragEnter(object sender, DragEventArgs e)
+        {
+            e.Effect = _client?.CurrentUser != null ? DragDropEffects.Move : DragDropEffects.None;
+        }
+
+        private async Task UploadFile(string filePath, string fileName)
+        {
+            var fileContent = System.IO.File.ReadAllBytes(filePath);
+
+            var formFileDescription = new FormFileDescription
+            {
+                StartPosition = FormStartPosition.Manual,
+                Location = new Point(Location.X, Location.Y)
+            };
+
+            DisableAllButtons();
+            DisableMenu();
+
+            await Task.Run(() => formFileDescription.ShowDialog());
+
+            EnableAllButtons();
+            EnableMenu();
+
+            var file = new File
+            {
+                Description = formFileDescription.FileDescription,
+                Name = fileName,
+                UserId = _client.CurrentUser.UserId
+            };
+
+            var fileId = _client.CreateFile(file);
+
+            rtbLogs.AppendLine(@"Uploading file, please wait...", Color.DarkGreen);
+
+            DisableAllButtons();
+            DisableMenu();
+
+            await Task.Run(() => _client.UploadFileContent(fileId, fileContent));
+
+            rtbLogs.AppendLine(@"File successfully uploaded", Color.DarkGreen);
+
+            EnableAllButtons();
+            EnableMenu();
         }
     }
 }

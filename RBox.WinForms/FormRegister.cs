@@ -42,7 +42,7 @@ namespace RBox.WinForms
                 }
                 catch
                 {
-                    throw new Exception("User already exists");
+                    Close();
                 }
             }
         }

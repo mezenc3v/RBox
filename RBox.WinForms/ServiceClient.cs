@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net.Http;
 using System.Net.Http.Headers;
-using System.Text;
-using System.Threading.Tasks;
 using RBox.Model;
 
 namespace RBox.WinForms
@@ -14,7 +10,9 @@ namespace RBox.WinForms
         public User CurrentUser => _currentUser;
         private static User _currentUser;
 
-        private const string ConnectionString = "http://localhost:52908/";
+        //private const string ConnectionString = "http://localhost:52908/";
+        private const string ConnectionString = "https://rboxwebapi20170605020002.azurewebsites.net";
+
         private static HttpClient _client;
 
         public ServiceClient()
@@ -29,9 +27,7 @@ namespace RBox.WinForms
             if (response.IsSuccessStatusCode)
             {
                 var result = response.Content.ReadAsAsync<User>().Result;
-                ////////////////////////////
                 _currentUser = result;
-                /////////////////////////////
                 return result;
             }
             throw new ServiceException("Error: {0}", response.StatusCode);
@@ -43,9 +39,7 @@ namespace RBox.WinForms
             if (response.IsSuccessStatusCode)
             {
                 var result = response.Content.ReadAsAsync<User>().Result;
-                ////////////////////////////
                 _currentUser = result;
-                /////////////////////////////
                 return result;
             }
             throw new ServiceException("Error: {0}", response.StatusCode);

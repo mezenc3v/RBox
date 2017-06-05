@@ -37,7 +37,7 @@ namespace RBox.WinForms
                 }
                 catch
                 {
-                    throw new Exception("Specified user does not exist");
+                    Close();
                 }
             }
         }

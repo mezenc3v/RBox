@@ -16,20 +16,20 @@ namespace RBox.WinForms
 
         private void btnCreateShare_Click(object sender, EventArgs e)
         {
-            try
+            var check = CheckUserName();
+            if (check)
             {
-                var check = CheckUserName();
-                if (check)
+                try
                 {
                     var user = FindUser();
                     UserId = user.UserId;
                     UserLogin = user.UserLogin;
                     Close();
                 }
-            }
-            catch
-            {
-                throw new Exception("User not found");
+                catch
+                {
+                    Close();
+                }
             }
         }
 

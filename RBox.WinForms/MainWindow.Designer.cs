@@ -38,27 +38,31 @@
             this.tsmItemAboutExit = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmHelp = new System.Windows.Forms.ToolStripMenuItem();
             this.tsmItemAbout = new System.Windows.Forms.ToolStripMenuItem();
-            this.btnDelete = new System.Windows.Forms.Button();
-            this.btnShare = new System.Windows.Forms.Button();
-            this.btnUpdate = new System.Windows.Forms.Button();
             this.labelCurrUser = new System.Windows.Forms.Label();
-            this.btnDownload = new System.Windows.Forms.Button();
-            this.btnAddFile = new System.Windows.Forms.Button();
             this.ttHelpMessages = new System.Windows.Forms.ToolTip(this.components);
             this.rtbLogs = new System.Windows.Forms.RichTextBox();
+            this.btnAddFile = new System.Windows.Forms.Button();
+            this.btnUpdate = new System.Windows.Forms.Button();
+            this.btnShare = new System.Windows.Forms.Button();
+            this.btnDelete = new System.Windows.Forms.Button();
+            this.btnDownload = new System.Windows.Forms.Button();
             this.MainMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // LbFiles
             // 
+            this.LbFiles.AllowDrop = true;
             this.LbFiles.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.LbFiles.FormattingEnabled = true;
-            this.LbFiles.Location = new System.Drawing.Point(12, 27);
+            this.LbFiles.ItemHeight = 30;
+            this.LbFiles.Location = new System.Drawing.Point(10, 25);
             this.LbFiles.Name = "LbFiles";
-            this.LbFiles.Size = new System.Drawing.Size(374, 264);
+            this.LbFiles.Size = new System.Drawing.Size(370, 244);
             this.LbFiles.TabIndex = 0;
             this.LbFiles.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.LbFiles_DrawItem);
             this.LbFiles.SelectedIndexChanged += new System.EventHandler(this.LbFiles_SelectedIndexChanged);
+            this.LbFiles.DragDrop += new System.Windows.Forms.DragEventHandler(this.LbFiles_DragDrop);
+            this.LbFiles.DragEnter += new System.Windows.Forms.DragEventHandler(this.LbFiles_DragEnter);
             this.LbFiles.MouseMove += new System.Windows.Forms.MouseEventHandler(this.LbFiles_MouseMove);
             // 
             // MainMenu
@@ -68,7 +72,7 @@
             this.tsmHelp});
             this.MainMenu.Location = new System.Drawing.Point(0, 0);
             this.MainMenu.Name = "MainMenu";
-            this.MainMenu.Size = new System.Drawing.Size(395, 24);
+            this.MainMenu.Size = new System.Drawing.Size(389, 24);
             this.MainMenu.TabIndex = 1;
             this.MainMenu.MouseMove += new System.Windows.Forms.MouseEventHandler(this.MainMenu_MouseMove);
             // 
@@ -126,92 +130,93 @@
             this.tsmItemAbout.Text = "About";
             this.tsmItemAbout.Click += new System.EventHandler(this.tsmItemAbout_Click);
             // 
-            // btnDelete
-            // 
-            this.btnDelete.BackColor = System.Drawing.Color.Transparent;
-            this.btnDelete.BackgroundImage = global::RBox.WinForms.Properties.Resources.Delete;
-            this.btnDelete.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btnDelete.Location = new System.Drawing.Point(164, 293);
-            this.btnDelete.Name = "btnDelete";
-            this.btnDelete.Size = new System.Drawing.Size(70, 70);
-            this.btnDelete.TabIndex = 3;
-            this.btnDelete.UseVisualStyleBackColor = false;
-            this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
-            // 
-            // btnShare
-            // 
-            this.btnShare.BackColor = System.Drawing.Color.Transparent;
-            this.btnShare.BackgroundImage = global::RBox.WinForms.Properties.Resources.Share;
-            this.btnShare.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btnShare.Location = new System.Drawing.Point(240, 293);
-            this.btnShare.Name = "btnShare";
-            this.btnShare.Size = new System.Drawing.Size(70, 70);
-            this.btnShare.TabIndex = 4;
-            this.btnShare.UseVisualStyleBackColor = false;
-            this.btnShare.Click += new System.EventHandler(this.btnShare_Click);
-            // 
-            // btnUpdate
-            // 
-            this.btnUpdate.BackColor = System.Drawing.Color.Transparent;
-            this.btnUpdate.BackgroundImage = global::RBox.WinForms.Properties.Resources.Refresh;
-            this.btnUpdate.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btnUpdate.Location = new System.Drawing.Point(316, 293);
-            this.btnUpdate.Name = "btnUpdate";
-            this.btnUpdate.Size = new System.Drawing.Size(70, 70);
-            this.btnUpdate.TabIndex = 5;
-            this.btnUpdate.UseVisualStyleBackColor = false;
-            this.btnUpdate.Click += new System.EventHandler(this.btnUpdate_Click);
-            // 
             // labelCurrUser
             // 
             this.labelCurrUser.BackColor = System.Drawing.Color.Transparent;
-            this.labelCurrUser.Location = new System.Drawing.Point(289, 9);
+            this.labelCurrUser.Location = new System.Drawing.Point(157, 9);
             this.labelCurrUser.Name = "labelCurrUser";
             this.labelCurrUser.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.labelCurrUser.Size = new System.Drawing.Size(100, 13);
+            this.labelCurrUser.Size = new System.Drawing.Size(225, 13);
             this.labelCurrUser.TabIndex = 6;
             this.labelCurrUser.Text = "    ";
             this.labelCurrUser.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
-            // btnDownload
+            // rtbLogs
             // 
-            this.btnDownload.BackColor = System.Drawing.Color.Transparent;
-            this.btnDownload.BackgroundImage = global::RBox.WinForms.Properties.Resources.Download;
-            this.btnDownload.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btnDownload.Location = new System.Drawing.Point(88, 293);
-            this.btnDownload.Name = "btnDownload";
-            this.btnDownload.Size = new System.Drawing.Size(70, 70);
-            this.btnDownload.TabIndex = 2;
-            this.btnDownload.UseVisualStyleBackColor = false;
-            this.btnDownload.Click += new System.EventHandler(this.btnDownload_Click);
+            this.rtbLogs.Location = new System.Drawing.Point(10, 350);
+            this.rtbLogs.Name = "rtbLogs";
+            this.rtbLogs.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
+            this.rtbLogs.Size = new System.Drawing.Size(370, 70);
+            this.rtbLogs.TabIndex = 9;
+            this.rtbLogs.Text = "";
             // 
             // btnAddFile
             // 
             this.btnAddFile.BackColor = System.Drawing.Color.Transparent;
             this.btnAddFile.BackgroundImage = global::RBox.WinForms.Properties.Resources.Add;
             this.btnAddFile.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.btnAddFile.Location = new System.Drawing.Point(12, 293);
+            this.btnAddFile.Location = new System.Drawing.Point(10, 275);
             this.btnAddFile.Name = "btnAddFile";
             this.btnAddFile.Size = new System.Drawing.Size(70, 70);
             this.btnAddFile.TabIndex = 8;
             this.btnAddFile.UseVisualStyleBackColor = false;
             this.btnAddFile.Click += new System.EventHandler(this.btnAddFile_Click);
             // 
-            // rtbLogs
+            // btnUpdate
             // 
-            this.rtbLogs.Location = new System.Drawing.Point(12, 369);
-            this.rtbLogs.Name = "rtbLogs";
-            this.rtbLogs.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
-            this.rtbLogs.Size = new System.Drawing.Size(374, 69);
-            this.rtbLogs.TabIndex = 9;
-            this.rtbLogs.Text = "";
+            this.btnUpdate.BackColor = System.Drawing.Color.Transparent;
+            this.btnUpdate.BackgroundImage = global::RBox.WinForms.Properties.Resources.Refresh;
+            this.btnUpdate.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnUpdate.Location = new System.Drawing.Point(310, 275);
+            this.btnUpdate.Name = "btnUpdate";
+            this.btnUpdate.Size = new System.Drawing.Size(70, 70);
+            this.btnUpdate.TabIndex = 5;
+            this.btnUpdate.UseVisualStyleBackColor = false;
+            this.btnUpdate.Click += new System.EventHandler(this.btnUpdate_Click);
+            // 
+            // btnShare
+            // 
+            this.btnShare.BackColor = System.Drawing.Color.Transparent;
+            this.btnShare.BackgroundImage = global::RBox.WinForms.Properties.Resources.Share;
+            this.btnShare.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnShare.Location = new System.Drawing.Point(235, 275);
+            this.btnShare.Name = "btnShare";
+            this.btnShare.Size = new System.Drawing.Size(70, 70);
+            this.btnShare.TabIndex = 4;
+            this.btnShare.UseVisualStyleBackColor = false;
+            this.btnShare.Click += new System.EventHandler(this.btnShare_Click);
+            // 
+            // btnDelete
+            // 
+            this.btnDelete.BackColor = System.Drawing.Color.Transparent;
+            this.btnDelete.BackgroundImage = global::RBox.WinForms.Properties.Resources.Delete;
+            this.btnDelete.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnDelete.Location = new System.Drawing.Point(160, 275);
+            this.btnDelete.Name = "btnDelete";
+            this.btnDelete.Size = new System.Drawing.Size(70, 70);
+            this.btnDelete.TabIndex = 3;
+            this.btnDelete.UseVisualStyleBackColor = false;
+            this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
+            // 
+            // btnDownload
+            // 
+            this.btnDownload.BackColor = System.Drawing.Color.Transparent;
+            this.btnDownload.BackgroundImage = global::RBox.WinForms.Properties.Resources.Download;
+            this.btnDownload.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            this.btnDownload.Location = new System.Drawing.Point(85, 275);
+            this.btnDownload.Name = "btnDownload";
+            this.btnDownload.Size = new System.Drawing.Size(70, 70);
+            this.btnDownload.TabIndex = 2;
+            this.btnDownload.UseVisualStyleBackColor = false;
+            this.btnDownload.Click += new System.EventHandler(this.btnDownload_Click);
             // 
             // MainWindow
             // 
+            this.AllowDrop = true;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
-            this.ClientSize = new System.Drawing.Size(395, 450);
+            this.ClientSize = new System.Drawing.Size(389, 431);
             this.Controls.Add(this.rtbLogs);
             this.Controls.Add(this.btnAddFile);
             this.Controls.Add(this.labelCurrUser);
