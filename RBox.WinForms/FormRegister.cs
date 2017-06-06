@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
-using RBox.Model;
 
 namespace RBox.WinForms
 {
     public partial class FormRegister : Form
     {
+        public string UserName;
+        public string Login;
+        public string Password;
+
         private const string DefaultName = @"your name";
         private const string DefaultLogin = @"your email";
         private const string DefaultPassword = @"your password";
@@ -35,28 +38,11 @@ namespace RBox.WinForms
             var check = CheckFields();
             if (check)
             {
-                try
-                {
-                    CreateUser();
-                    Close();
-                }
-                catch
-                {
-                    Close();
-                }
+                UserName = tbName.Text;
+                Login = tbLogin.Text;
+                Password = tbPassword.Text;
+                Close();
             }
-        }
-
-        private void CreateUser()
-        {
-            var user = new User
-            {
-                Name = tbName.Text,
-                Password = tbPassword.Text,
-                UserLogin = tbLogin.Text
-            };
-            var client = new ServiceClient();
-            client.CreateUser(user);
         }
 
         private bool CheckFields()

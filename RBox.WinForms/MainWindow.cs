@@ -20,7 +20,7 @@ namespace RBox.WinForms
 
         private void MainWindow_Load(object sender, EventArgs e)
         {
-            ttHelpMessages.SetToolTip(btnAddFile, "Add file");
+            ttHelpMessages.SetToolTip(btnAddFile, "Upload file");
             ttHelpMessages.SetToolTip(btnDelete, "Delete file");
             ttHelpMessages.SetToolTip(btnDownload, "Download file");
             ttHelpMessages.SetToolTip(btnShare, "Share file");
@@ -42,24 +42,44 @@ namespace RBox.WinForms
                 Location = new Point(Location.X, Location.Y)
             };
             await Task.Run(() => formShare.ShowDialog());
-            if (formShare.UserId != _client.CurrentUser.UserId && formShare.UserId != Guid.Empty)
+
+            var user = new User
             {
-                var share = new Share
+                UserLogin = formShare.UserLogin
+            };
+            var client = new ServiceClient();
+            try
+            {
+                var foundUser = client.FindUser(user);
+
+                if (foundUser.UserId != _client.CurrentUser.UserId && foundUser.UserId != Guid.Empty)
                 {
-                    FileId = _currFile.FileId,
-                    UserId = formShare.UserId
-                };
-                _client.CreateShare(share);
-                rtbLogs.AppendLine(@"You shared a file " + _currFile.Name + " with the user " + formShare.UserLogin, Color.DarkGreen);
+                    var share = new Share
+                    {
+                        FileId = _currFile.FileId,
+                        UserId = foundUser.UserId
+                    };
+                    try
+                    {
+                        _client.CreateShare(share);
+                        rtbLogs.AppendLine(@"You shared a file " + _currFile.Name + " with the user " + formShare.UserLogin, Color.DarkGreen);
+                    }
+                    catch
+                    {
+                        rtbLogs.AppendLine(@"Unable to share file", Color.Red);
+                    }
+                }
+                else if (foundUser.UserId != Guid.Empty)
+                {
+                    rtbLogs.AppendLine(@"You are already the owner of this file", Color.Red);
+                }
             }
-            else if (formShare.UserId != Guid.Empty)
-            {
-                rtbLogs.AppendLine(@"You are already the owner of this file", Color.Red);
-            }
-            else
+            catch
             {
                 rtbLogs.AppendLine(@"User not found", Color.Red);
             }
+
+            
 
             UpdateUserInformation();
         }
@@ -149,13 +169,24 @@ namespace RBox.WinForms
                 formLogin.ShowDialog();
             });
 
-            if (_client.CurrentUser != null)
+            if (formLogin.Login != null && formLogin.Password != null)
             {
-                rtbLogs.AppendLine(@"User " + _client.CurrentUser.UserLogin + " was logged in", Color.DarkGreen);
-            }
-            else
-            {
-                rtbLogs.AppendLine(@"Specified user does not exist", Color.Red);
+                var client = new ServiceClient();
+                var user = new User
+                {
+                    UserLogin = formLogin.Login,
+                    Password = formLogin.Password
+                };
+
+                try
+                {
+                    client.LoginUser(user);
+                    rtbLogs.AppendLine(@"User " + _client.CurrentUser.UserLogin + " is logged in", Color.DarkGreen);
+                }
+                catch
+                {
+                    rtbLogs.AppendLine(@"Specified user does not exist", Color.Red);
+                }
             }
 
             EnableAllButtons();
@@ -173,25 +204,40 @@ namespace RBox.WinForms
 
             DisableAllButtons();
             DisableMenu();
+
             await Task.Run(() => formRegister.ShowDialog());
+
+            if (formRegister.Login != null)
+            {
+                try
+                {
+                    var user = new User
+                    {
+                        Name = formRegister.UserName,
+                        Password = formRegister.Password,
+                        UserLogin = formRegister.Login
+                    };
+                    var client = new ServiceClient();
+                    client.CreateUser(user);
+
+                    rtbLogs.AppendLine(@"User " + _client.CurrentUser.UserLogin + " created", Color.DarkGreen);
+                    rtbLogs.AppendLine(@"User " + _client.CurrentUser.UserLogin + " was logged in", Color.DarkGreen);
+                }
+                catch
+                {
+                    rtbLogs.AppendLine(@"User already exists", Color.Red);
+                }
+            }
+
             EnableAllButtons();
             EnableMenu();
 
-            if (_client.CurrentUser != null)
-            {
-                rtbLogs.AppendLine(@"User " + _client.CurrentUser.UserLogin + " created", Color.DarkGreen);
-                rtbLogs.AppendLine(@"User " + _client.CurrentUser.UserLogin + " was logged in", Color.DarkGreen);
-            }
-            else
-            {
-                rtbLogs.AppendLine(@"User already exists", Color.Red);
-
-            }
             UpdateUserInformation();
         }
 
         private void tsmItemCloseUser_Click(object sender, EventArgs e)
         {
+            rtbLogs.AppendLine(@"User " + _client.CurrentUser.UserLogin + " is logged out", Color.DarkGreen);
             _client?.CloseUser();
             UpdateUserInformation();
         }
@@ -285,94 +331,6 @@ namespace RBox.WinForms
             UpdateUserInformation();
         }
 
-        private void CheckMenu()
-        {
-            if (_client?.CurrentUser == null)
-            {
-                tsmItemLogOut.Enabled = false;
-                tsmItemRegister.Enabled = true;
-                tsmItemLogin.Enabled = true;
-            }
-            else
-            {
-                tsmItemLogOut.Enabled = true;
-                tsmItemRegister.Enabled = false;
-                tsmItemLogin.Enabled = false;
-            }
-        }
-
-        private void CheckButtons()
-        {
-            if (_client?.CurrentUser == null)
-            {
-                DisableAllButtons();
-            }
-            else
-            {
-                EnableAllButtons();
-            }
-
-            if (LbFiles.Items.Count == 0)
-            {
-                btnDelete.Enabled = false;
-                btnDownload.Enabled = false;
-                btnShare.Enabled = false;
-            }
-            else
-            {
-                btnDelete.Enabled = true;
-                btnDownload.Enabled = true;
-                btnShare.Enabled = true;
-            }
-        }
-
-        private void UpdateUserInformation()
-        {
-            if (_client?.CurrentUser != null)
-            {
-                var files = _client?.GetUserFiles();
-                var shares = _client?.GetSharedFiles();
-
-                LbFiles.DataSource = files?.Concat(shares).ToArray();
-
-                labelCurrUser.Text = _client.CurrentUser.UserLogin;
-            }
-            else
-            {
-                LbFiles.DataSource = new File[0];
-                labelCurrUser.Text = "";
-            }
-            CheckButtons();
-        }
-
-        private void DisableAllButtons()
-        {
-            btnAddFile.Enabled = false;
-            btnDelete.Enabled = false;
-            btnDownload.Enabled = false;
-            btnShare.Enabled = false;
-            btnUpdate.Enabled = false;
-        }
-
-        private void EnableAllButtons()
-        {
-            btnAddFile.Enabled = true;
-            btnDelete.Enabled = true;
-            btnDownload.Enabled = true;
-            btnShare.Enabled = true;
-            btnUpdate.Enabled = true;
-        }
-
-        private void DisableMenu()
-        {
-            MainMenu.Enabled = false;
-        }
-
-        private void EnableMenu()
-        {
-            MainMenu.Enabled = true;
-        }
-
         private async void LbFiles_DragDrop(object sender, DragEventArgs e)
         {
             var filePath = ((string[])e.Data.GetData(DataFormats.FileDrop, false)).Last();
@@ -433,6 +391,94 @@ namespace RBox.WinForms
 
             EnableAllButtons();
             EnableMenu();
+        }
+
+        private void CheckMenu()
+        {
+            if (_client?.CurrentUser == null)
+            {
+                tsmItemLogOut.Enabled = false;
+                tsmItemRegister.Enabled = true;
+                tsmItemLogin.Enabled = true;
+            }
+            else
+            {
+                tsmItemLogOut.Enabled = true;
+                tsmItemRegister.Enabled = false;
+                tsmItemLogin.Enabled = false;
+            }
+        }
+
+        private void CheckButtons()
+        {
+            if (_client?.CurrentUser == null)
+            {
+                DisableAllButtons();
+            }
+            else
+            {
+                EnableAllButtons();
+
+                if (LbFiles.Items.Count == 0)
+                {
+                    btnDelete.Enabled = false;
+                    btnDownload.Enabled = false;
+                    btnShare.Enabled = false;
+                }
+                else
+                {
+                    btnDelete.Enabled = true;
+                    btnDownload.Enabled = true;
+                    btnShare.Enabled = true;
+                }
+            }
+        }
+
+        private void UpdateUserInformation()
+        {
+            if (_client?.CurrentUser != null)
+            {
+                var files = _client?.GetUserFiles();
+                var shares = _client?.GetSharedFiles();
+
+                LbFiles.DataSource = files?.Concat(shares).ToArray();
+
+                labelCurrUser.Text = _client.CurrentUser.UserLogin;
+            }
+            else
+            {
+                LbFiles.DataSource = new File[0];
+                labelCurrUser.Text = "";
+            }
+            CheckButtons();
+        }
+
+        private void DisableAllButtons()
+        {
+            btnAddFile.Enabled = false;
+            btnDelete.Enabled = false;
+            btnDownload.Enabled = false;
+            btnShare.Enabled = false;
+            btnUpdate.Enabled = false;
+        }
+
+        private void EnableAllButtons()
+        {
+            btnAddFile.Enabled = true;
+            btnDelete.Enabled = true;
+            btnDownload.Enabled = true;
+            btnShare.Enabled = true;
+            btnUpdate.Enabled = true;
+        }
+
+        private void DisableMenu()
+        {
+            MainMenu.Enabled = false;
+        }
+
+        private void EnableMenu()
+        {
+            MainMenu.Enabled = true;
         }
     }
 }

@@ -35,7 +35,7 @@
             // 
             // btnCreateShare
             // 
-            this.btnCreateShare.Location = new System.Drawing.Point(75, 51);
+            this.btnCreateShare.Location = new System.Drawing.Point(224, 5);
             this.btnCreateShare.Name = "btnCreateShare";
             this.btnCreateShare.Size = new System.Drawing.Size(75, 23);
             this.btnCreateShare.TabIndex = 15;
@@ -46,30 +46,30 @@
             // labelUserLogin
             // 
             this.labelUserLogin.AutoSize = true;
-            this.labelUserLogin.Location = new System.Drawing.Point(12, 9);
+            this.labelUserLogin.Location = new System.Drawing.Point(5, 10);
             this.labelUserLogin.Name = "labelUserLogin";
-            this.labelUserLogin.Size = new System.Drawing.Size(54, 13);
+            this.labelUserLogin.Size = new System.Drawing.Size(60, 13);
             this.labelUserLogin.TabIndex = 14;
-            this.labelUserLogin.Text = "User login";
+            this.labelUserLogin.Text = "User login: ";
             // 
             // tbUserLogin
             // 
-            this.tbUserLogin.Location = new System.Drawing.Point(12, 25);
+            this.tbUserLogin.Location = new System.Drawing.Point(65, 7);
             this.tbUserLogin.Name = "tbUserLogin";
-            this.tbUserLogin.Size = new System.Drawing.Size(214, 20);
+            this.tbUserLogin.Size = new System.Drawing.Size(153, 20);
             this.tbUserLogin.TabIndex = 13;
             // 
             // FormCreateShare
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(237, 77);
+            this.ClientSize = new System.Drawing.Size(304, 31);
             this.Controls.Add(this.btnCreateShare);
             this.Controls.Add(this.labelUserLogin);
             this.Controls.Add(this.tbUserLogin);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "FormCreateShare";
-            this.Text = "FormCreateShare";
+            this.Text = "Share file";
             this.ResumeLayout(false);
             this.PerformLayout();
 

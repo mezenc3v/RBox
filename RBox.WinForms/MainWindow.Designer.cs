@@ -133,10 +133,11 @@
             // labelCurrUser
             // 
             this.labelCurrUser.BackColor = System.Drawing.Color.Transparent;
-            this.labelCurrUser.Location = new System.Drawing.Point(157, 9);
+            this.labelCurrUser.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelCurrUser.Location = new System.Drawing.Point(138, 2);
             this.labelCurrUser.Name = "labelCurrUser";
             this.labelCurrUser.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.labelCurrUser.Size = new System.Drawing.Size(225, 13);
+            this.labelCurrUser.Size = new System.Drawing.Size(245, 22);
             this.labelCurrUser.TabIndex = 6;
             this.labelCurrUser.Text = "    ";
             this.labelCurrUser.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;

@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Drawing;
-using System.Drawing.Design;
 using System.Windows.Forms;
-using RBox.Model;
 
 namespace RBox.WinForms
 {
     public partial class FormLogin : Form
     {
+
+        public string Login;
+        public string Password;
         private const string DefaultLogin = @"your email";
         private const string DefaultPassword = @"your password";
 
@@ -30,29 +31,10 @@ namespace RBox.WinForms
             var check = CheckFields();
             if (check)
             {
-                try
-                {
-                    GetUser();
-                    Close();
-                }
-                catch
-                {
-                    Close();
-                }
+                Login = tbLogin.Text;
+                Password = tbPassword.Text;
+                Close();
             }
-        }
-
-        private void GetUser()
-        {
-            var login = tbLogin.Text;
-            var password = tbPassword.Text;
-            var client = new ServiceClient();
-            var user = new User
-            {
-                UserLogin = login,
-                Password = password
-            };
-            client.LoginUser(user);
         }
 
         private void tbLogin_Click(object sender, EventArgs e)
