@@ -70,6 +70,7 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.Name = "FormCreateShare";
             this.Text = "Share file";
+            this.Load += new System.EventHandler(this.FormCreateShare_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 

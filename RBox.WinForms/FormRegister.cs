@@ -22,6 +22,7 @@ namespace RBox.WinForms
 
         private void FormRegister_Load(object sender, EventArgs e)
         {
+            BackColor = ColorTranslator.FromHtml("#CBDCEF");
             tbName.ForeColor = Color.Gray;
             tbLogin.ForeColor = Color.Gray;
             tbPassword.ForeColor = Color.Gray;

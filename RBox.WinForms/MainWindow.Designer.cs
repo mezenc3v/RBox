@@ -46,6 +46,11 @@
             this.btnShare = new System.Windows.Forms.Button();
             this.btnDelete = new System.Windows.Forms.Button();
             this.btnDownload = new System.Windows.Forms.Button();
+            this.labelStart = new System.Windows.Forms.Label();
+            this.labelStart2 = new System.Windows.Forms.Label();
+            this.labelLogin = new System.Windows.Forms.Label();
+            this.labelStart3 = new System.Windows.Forms.Label();
+            this.labelRegister = new System.Windows.Forms.Label();
             this.MainMenu.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -55,7 +60,7 @@
             this.LbFiles.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawFixed;
             this.LbFiles.FormattingEnabled = true;
             this.LbFiles.ItemHeight = 30;
-            this.LbFiles.Location = new System.Drawing.Point(10, 25);
+            this.LbFiles.Location = new System.Drawing.Point(7, 25);
             this.LbFiles.Name = "LbFiles";
             this.LbFiles.Size = new System.Drawing.Size(370, 244);
             this.LbFiles.TabIndex = 0;
@@ -146,6 +151,7 @@
             // 
             this.rtbLogs.Location = new System.Drawing.Point(10, 350);
             this.rtbLogs.Name = "rtbLogs";
+            this.rtbLogs.ReadOnly = true;
             this.rtbLogs.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
             this.rtbLogs.Size = new System.Drawing.Size(370, 70);
             this.rtbLogs.TabIndex = 9;
@@ -211,6 +217,61 @@
             this.btnDownload.UseVisualStyleBackColor = false;
             this.btnDownload.Click += new System.EventHandler(this.btnDownload_Click);
             // 
+            // labelStart
+            // 
+            this.labelStart.AutoSize = true;
+            this.labelStart.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelStart.Location = new System.Drawing.Point(56, 60);
+            this.labelStart.Name = "labelStart";
+            this.labelStart.Size = new System.Drawing.Size(277, 50);
+            this.labelStart.TabIndex = 10;
+            this.labelStart.Text = "This is a simple application \r\nfor file sharing and storage.";
+            // 
+            // labelStart2
+            // 
+            this.labelStart2.AutoSize = true;
+            this.labelStart2.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelStart2.Location = new System.Drawing.Point(77, 137);
+            this.labelStart2.Name = "labelStart2";
+            this.labelStart2.Size = new System.Drawing.Size(236, 50);
+            this.labelStart2.TabIndex = 11;
+            this.labelStart2.Text = "To use the application, \r\nplease ";
+            // 
+            // labelLogin
+            // 
+            this.labelLogin.AutoSize = true;
+            this.labelLogin.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, ((System.Drawing.FontStyle)(((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic) 
+                | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelLogin.Location = new System.Drawing.Point(146, 162);
+            this.labelLogin.Name = "labelLogin";
+            this.labelLogin.Size = new System.Drawing.Size(63, 25);
+            this.labelLogin.TabIndex = 12;
+            this.labelLogin.Text = "login";
+            this.labelLogin.Click += new System.EventHandler(this.labelLogin_Click);
+            // 
+            // labelStart3
+            // 
+            this.labelStart3.AutoSize = true;
+            this.labelStart3.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelStart3.ForeColor = System.Drawing.SystemColors.ControlText;
+            this.labelStart3.Location = new System.Drawing.Point(203, 162);
+            this.labelStart3.Name = "labelStart3";
+            this.labelStart3.Size = new System.Drawing.Size(31, 25);
+            this.labelStart3.TabIndex = 13;
+            this.labelStart3.Text = "or";
+            // 
+            // labelRegister
+            // 
+            this.labelRegister.AutoSize = true;
+            this.labelRegister.Font = new System.Drawing.Font("Microsoft Sans Serif", 15.75F, ((System.Drawing.FontStyle)(((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Italic) 
+                | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.labelRegister.Location = new System.Drawing.Point(226, 162);
+            this.labelRegister.Name = "labelRegister";
+            this.labelRegister.Size = new System.Drawing.Size(92, 25);
+            this.labelRegister.TabIndex = 14;
+            this.labelRegister.Text = "register";
+            this.labelRegister.Click += new System.EventHandler(this.labelRegister_Click);
+            // 
             // MainWindow
             // 
             this.AllowDrop = true;
@@ -218,6 +279,11 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Control;
             this.ClientSize = new System.Drawing.Size(389, 431);
+            this.Controls.Add(this.labelRegister);
+            this.Controls.Add(this.labelStart3);
+            this.Controls.Add(this.labelLogin);
+            this.Controls.Add(this.labelStart2);
+            this.Controls.Add(this.labelStart);
             this.Controls.Add(this.rtbLogs);
             this.Controls.Add(this.btnAddFile);
             this.Controls.Add(this.labelCurrUser);
@@ -259,6 +325,11 @@
         private System.Windows.Forms.Button btnAddFile;
         private System.Windows.Forms.ToolTip ttHelpMessages;
         private System.Windows.Forms.RichTextBox rtbLogs;
+        private System.Windows.Forms.Label labelStart;
+        private System.Windows.Forms.Label labelStart2;
+        private System.Windows.Forms.Label labelLogin;
+        private System.Windows.Forms.Label labelStart3;
+        private System.Windows.Forms.Label labelRegister;
     }
 }
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace RBox.WinForms
@@ -16,6 +17,11 @@ namespace RBox.WinForms
         {
             FileDescription = tbFileDescription.Text;
             Close();
+        }
+
+        private void FormFileDescription_Load(object sender, EventArgs e)
+        {
+            BackColor = ColorTranslator.FromHtml("#CBDCEF");
         }
     }
 }

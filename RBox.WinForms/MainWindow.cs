@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Drawing;
 using System.Linq;
+using System.Resources;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using RBox.Model;
 using RBox.WinForms.Extensions;
+using RBox.WinForms.Properties;
 
 namespace RBox.WinForms
 {
@@ -20,6 +22,8 @@ namespace RBox.WinForms
 
         private void MainWindow_Load(object sender, EventArgs e)
         {
+            CreateInitialForm();
+
             ttHelpMessages.SetToolTip(btnAddFile, "Upload file");
             ttHelpMessages.SetToolTip(btnDelete, "Delete file");
             ttHelpMessages.SetToolTip(btnDownload, "Download file");
@@ -27,7 +31,7 @@ namespace RBox.WinForms
             ttHelpMessages.SetToolTip(btnUpdate, "Update file list");
 
             MainMenu.BackColor = ColorTranslator.FromHtml("#CBDCEF");
-            BackColor = MainMenu.BackColor = ColorTranslator.FromHtml("#CBDCEF");
+            BackColor = ColorTranslator.FromHtml("#CBDCEF");
 
             _client = new ServiceClient();
             CheckMenu();
@@ -50,7 +54,11 @@ namespace RBox.WinForms
             var client = new ServiceClient();
             try
             {
+                DisableAllButtons();
+                DisableMenu();
                 var foundUser = client.FindUser(user);
+                EnableAllButtons();
+                EnableMenu();
 
                 if (foundUser.UserId != _client.CurrentUser.UserId && foundUser.UserId != Guid.Empty)
                 {
@@ -78,8 +86,6 @@ namespace RBox.WinForms
             {
                 rtbLogs.AppendLine(@"User not found", Color.Red);
             }
-
-            
 
             UpdateUserInformation();
         }
@@ -141,6 +147,7 @@ namespace RBox.WinForms
             {
                 rtbLogs.AppendLine(@"File not found", Color.Red);
             }
+            UpdateUserInformation();
         }
 
         private void tsmItemAbout_Click(object sender, EventArgs e)
@@ -182,6 +189,7 @@ namespace RBox.WinForms
                 {
                     client.LoginUser(user);
                     rtbLogs.AppendLine(@"User " + _client.CurrentUser.UserLogin + " is logged in", Color.DarkGreen);
+                    DeleteInitialForm();
                 }
                 catch
                 {
@@ -222,6 +230,8 @@ namespace RBox.WinForms
 
                     rtbLogs.AppendLine(@"User " + _client.CurrentUser.UserLogin + " created", Color.DarkGreen);
                     rtbLogs.AppendLine(@"User " + _client.CurrentUser.UserLogin + " was logged in", Color.DarkGreen);
+
+                    DeleteInitialForm();
                 }
                 catch
                 {
@@ -479,6 +489,41 @@ namespace RBox.WinForms
         private void EnableMenu()
         {
             MainMenu.Enabled = true;
+        }
+
+        private void CreateInitialForm()
+        {
+            labelStart.BackColor = LbFiles.BackColor;
+            labelStart2.BackColor = LbFiles.BackColor;
+            labelStart3.BackColor = LbFiles.BackColor;
+
+            labelLogin.BackColor = LbFiles.BackColor;
+            labelRegister.BackColor = LbFiles.BackColor;
+            labelLogin.ForeColor = ColorTranslator.FromHtml("#348798");
+            labelRegister.ForeColor = ColorTranslator.FromHtml("#348798");
+
+            labelStart.ForeColor = ColorTranslator.FromHtml("#55BDD3");
+            labelStart2.ForeColor = ColorTranslator.FromHtml("#55BDD3");
+            labelStart3.ForeColor = ColorTranslator.FromHtml("#55BDD3");
+        }
+
+        private void DeleteInitialForm()
+        {
+            labelStart.Visible = false;
+            labelStart2.Visible = false;
+            labelStart3.Visible = false;
+            labelLogin.Visible = false;
+            labelRegister.Visible = false;
+        }
+
+        private void labelRegister_Click(object sender, EventArgs e)
+        {
+            tsmItemRegister_Click(sender, e);
+        }
+
+        private void labelLogin_Click(object sender, EventArgs e)
+        {
+            tsmItemLogin_Click(sender,e);
         }
     }
 }

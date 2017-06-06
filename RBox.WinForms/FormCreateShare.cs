@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace RBox.WinForms
@@ -30,6 +31,11 @@ namespace RBox.WinForms
                 return false;
             }
             return true;
+        }
+
+        private void FormCreateShare_Load(object sender, EventArgs e)
+        {
+            BackColor = ColorTranslator.FromHtml("#CBDCEF");
         }
     }
 }

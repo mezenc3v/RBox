@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Reflection;
 using System.Windows.Forms;
 
@@ -100,6 +101,11 @@ namespace RBox.WinForms
         private void okButton_Click(object sender, EventArgs e)
         {
             Close();
+        }
+
+        private void FormAbout_Load(object sender, EventArgs e)
+        {
+            BackColor = ColorTranslator.FromHtml("#CBDCEF");
         }
     }
 }

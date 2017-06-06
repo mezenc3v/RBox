@@ -6,7 +6,6 @@ namespace RBox.WinForms
 {
     public partial class FormLogin : Form
     {
-
         public string Login;
         public string Password;
         private const string DefaultLogin = @"your email";
@@ -19,6 +18,7 @@ namespace RBox.WinForms
 
         private void FormLogin_Load(object sender, EventArgs e)
         {
+            BackColor = ColorTranslator.FromHtml("#CBDCEF");
             tbLogin.ForeColor = Color.Gray;
             tbPassword.ForeColor = Color.Gray;
 
